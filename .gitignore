@@ -33,4 +33,7 @@ dist-ssr
 
 # Local env
 .env
-.env
+
+# Workspace and local worktree backup
+.workspace/
+.git.worktree-pointer-backup
