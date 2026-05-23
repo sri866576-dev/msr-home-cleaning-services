@@ -741,7 +741,7 @@
 
 @media (max-width: 640px) {
   .hero-brand-copy-group {
-    transform: translateY(-0.35rem);
+    transform: none;
   }
 
   .floating-contact-trigger,
@@ -793,7 +793,7 @@
   .hero-copy-stack {
     position: relative;
     z-index: 2;
-    margin-top: 0.15rem;
+    margin-top: 0.35rem;
     padding-inline: 0.1rem;
   }
 }

@@ -7,6 +7,26 @@ export type BookingLead = {
   source: string;
 };
 
+export function normalizeName(value: string) {
+  return value
+    .replace(/[^A-Za-z\s]/g, "")
+    .replace(/\s{2,}/g, " ")
+    .slice(0, 100)
+    .trimStart();
+}
+
+export function isValidName(value: string) {
+  return /^[A-Za-z]+(?:\s[A-Za-z]+)*$/.test(value.trim());
+}
+
+export function normalizePhoneNumber(value: string) {
+  return value.replace(/\D/g, "").slice(0, 10);
+}
+
+export function isValidPhoneNumber(value: string) {
+  return /^\d{10}$/.test(value);
+}
+
 const SHEETS_WEBHOOK_URL = import.meta.env.VITE_GOOGLE_SHEETS_WEBHOOK_URL?.trim() ?? "";
 const GOOGLE_FORM_PREFILL_URL = import.meta.env.VITE_GOOGLE_FORM_PREFILL_URL?.trim() ?? "";
 const GOOGLE_FORM_ENTRY_NAME = import.meta.env.VITE_GOOGLE_FORM_ENTRY_NAME?.trim() ?? "";

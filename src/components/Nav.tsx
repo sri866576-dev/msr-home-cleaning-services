@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, Menu, X } from "lucide-react";
-import logoImage from "../../Blue Cleaning Services Logo_dark-blue.png";
 
 export default function Nav({ onBook }: { onBook?: () => void }) {
   const [open, setOpen] = useState(false);
@@ -19,19 +18,14 @@ export default function Nav({ onBook }: { onBook?: () => void }) {
   };
 
   return (
-    <header className="fixed top-0 z-40 w-full border-b border-sky-200/70 bg-[#dff4ff]/95 backdrop-blur-md">
-      <div className="flex w-full items-center justify-between px-4 py-3 sm:px-5 md:px-8">
-        <a href="#home" className="flex items-center gap-3">
-          <img
-            src={logoImage}
-            alt="MSR Home Cleaning logo"
-            className="brand-logo-dark-blue h-11 w-11 object-contain sm:h-12 sm:w-12"
-          />
-          <div className="leading-tight">
-            <div className="font-sans text-[0.84rem] font-light uppercase tracking-[0.22em] text-navy sm:text-[0.9rem] md:text-[1.05rem] md:tracking-[0.3em]">
-              <span className="text-[#1f4f8f]">MSR</span>
+    <header className="fixed top-0 z-40 w-full border-b border-white/10 bg-black/95 backdrop-blur-md">
+      <div className="flex w-full items-center justify-between gap-3 px-4 py-3.5 sm:px-6 sm:py-4 md:px-10">
+        <a href="#home" className="flex min-w-0 flex-1 items-center pr-2">
+          <div className="min-w-0 leading-tight">
+            <div className="truncate font-sans text-[0.72rem] font-light uppercase tracking-[0.14em] text-white sm:text-[0.95rem] sm:tracking-[0.2em] md:text-[1.08rem] md:tracking-[0.24em]">
+              <span className="text-white">MSR Home Services</span>
             </div>
-            <div className="text-[9px] uppercase tracking-[0.22em] text-navy/65 sm:text-[10px] md:text-xs">
+            <div className="truncate text-[8px] uppercase tracking-[0.16em] text-white/70 sm:text-[10px] sm:tracking-[0.22em] md:text-xs">
               Hyderabad
             </div>
           </div>
@@ -43,7 +37,7 @@ export default function Nav({ onBook }: { onBook?: () => void }) {
               <a
                 key={l.label}
                 href={l.to}
-                className="text-sm font-light tracking-wide text-navy/80 hover:text-gold"
+                className="text-sm font-light tracking-wide text-white/85 hover:text-gold"
               >
                 {l.label}
               </a>
@@ -51,7 +45,7 @@ export default function Nav({ onBook }: { onBook?: () => void }) {
               <Link
                 key={l.to}
                 to={l.to}
-                className="text-sm font-light tracking-wide text-navy/80 hover:text-gold"
+                className="text-sm font-light tracking-wide text-white/85 hover:text-gold"
               >
                 {l.label}
               </Link>
@@ -77,7 +71,7 @@ export default function Nav({ onBook }: { onBook?: () => void }) {
 
         <button
           onClick={() => setOpen((s) => !s)}
-          className="rounded-md p-2 text-navy lg:hidden"
+          className="shrink-0 rounded-md p-2 text-white lg:hidden"
           aria-label="Toggle menu"
         >
           {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
@@ -85,7 +79,7 @@ export default function Nav({ onBook }: { onBook?: () => void }) {
       </div>
 
       {open && (
-        <div className="border-t border-sky-200/70 bg-[#dff4ff] lg:hidden">
+        <div className="border-t border-white/10 bg-black lg:hidden">
           <div className="flex flex-col gap-1 px-4 py-4 sm:px-5">
             {links.map((l) =>
               l.anchor ? (
@@ -93,7 +87,7 @@ export default function Nav({ onBook }: { onBook?: () => void }) {
                   key={l.label}
                   href={l.to}
                   onClick={() => setOpen(false)}
-                  className="rounded-md px-3 py-2.5 text-sm font-light text-navy/80 hover:bg-white/60 hover:text-gold"
+                  className="rounded-md px-3 py-2.5 text-sm font-light text-white/85 hover:bg-white/10 hover:text-gold"
                 >
                   {l.label}
                 </a>
@@ -102,7 +96,7 @@ export default function Nav({ onBook }: { onBook?: () => void }) {
                   key={l.to}
                   to={l.to}
                   onClick={() => setOpen(false)}
-                  className="rounded-md px-3 py-2.5 text-sm font-light text-navy/80 hover:bg-white/60 hover:text-gold"
+                  className="rounded-md px-3 py-2.5 text-sm font-light text-white/85 hover:bg-white/10 hover:text-gold"
                 >
                   {l.label}
                 </Link>

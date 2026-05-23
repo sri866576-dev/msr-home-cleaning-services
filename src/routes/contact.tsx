@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Phone, MessageCircle, MapPin, Clock, ArrowRight } from "lucide-react";
 import BackButton from "@/components/BackButton";
 import Nav from "@/components/Nav";
+import { isValidName, isValidPhoneNumber, normalizeName, normalizePhoneNumber } from "@/lib/booking";
 
 const PHONE = "+918919780725";
 const PHONE_DISPLAY = "8919780725";
@@ -31,10 +32,28 @@ function ContactPage() {
     e.preventDefault();
     if (isSubmitting) return;
     const form = e.currentTarget as HTMLFormElement;
-    const name = (form.elements.namedItem("name") as HTMLInputElement)?.value?.trim() ?? "";
-    const phone = (form.elements.namedItem("phone") as HTMLInputElement)?.value?.trim() ?? "";
+    const nameInput = form.elements.namedItem("name") as HTMLInputElement;
+    const phoneInput = form.elements.namedItem("phone") as HTMLInputElement;
+    const name = normalizeName(nameInput?.value ?? "").trim();
+    const phone = normalizePhoneNumber(phoneInput?.value ?? "");
     const service = (form.elements.namedItem("service") as HTMLSelectElement)?.value ?? "General Enquiry";
     const message = (form.elements.namedItem("message") as HTMLTextAreaElement)?.value?.trim() ?? "";
+    nameInput.value = name;
+    phoneInput.value = phone;
+    nameInput.setCustomValidity("");
+    phoneInput.setCustomValidity("");
+
+    if (!isValidName(name)) {
+      nameInput.setCustomValidity("Name must contain only letters and spaces.");
+      nameInput.reportValidity();
+      return;
+    }
+
+    if (!isValidPhoneNumber(phone)) {
+      phoneInput.setCustomValidity("Mobile number must contain exactly 10 digits.");
+      phoneInput.reportValidity();
+      return;
+    }
 
     const text = `Hi MSR Home Cleaning,%0AService: ${service}%0AName: ${name}%0APhone: ${phone}%0AMessage: ${message}`;
     const url = `https://wa.me/${WHATSAPP_PHONE}?text=${text}`;
@@ -99,8 +118,36 @@ function ContactPage() {
             <p className="mt-2 text-sm font-light text-white/70">Fill in your details — we will call you back shortly.</p>
             <div className="mt-6">
               <form onSubmit={handleSubmit} className="space-y-3">
-                <input name="name" placeholder="Full name" className="w-full rounded-md border border-input bg-white px-4 py-3 text-sm text-foreground" required />
-                <input name="phone" placeholder="Phone number" className="w-full rounded-md border border-input bg-white px-4 py-3 text-sm text-foreground" required />
+                <input
+                  name="name"
+                  placeholder="Full name"
+                  className="w-full rounded-md border border-input bg-white px-4 py-3 text-sm text-foreground"
+                  required
+                  maxLength={100}
+                  pattern="[A-Za-z ]+"
+                  title="Name must contain only letters and spaces."
+                  onInput={(e) => {
+                    const input = e.currentTarget;
+                    input.value = normalizeName(input.value);
+                    input.setCustomValidity("");
+                  }}
+                />
+                <input
+                  name="phone"
+                  type="tel"
+                  inputMode="numeric"
+                  placeholder="Phone number"
+                  className="w-full rounded-md border border-input bg-white px-4 py-3 text-sm text-foreground"
+                  required
+                  maxLength={10}
+                  pattern="[0-9]{10}"
+                  title="Mobile number must contain exactly 10 digits."
+                  onInput={(e) => {
+                    const input = e.currentTarget;
+                    input.value = normalizePhoneNumber(input.value);
+                    input.setCustomValidity("");
+                  }}
+                />
                 <select name="service" className="w-full rounded-md border border-input bg-white px-4 py-3 text-sm text-foreground">
                   <option>General Enquiry</option>
                   <option>Deep Home Cleaning</option>

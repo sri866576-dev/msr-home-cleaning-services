@@ -30,7 +30,14 @@ import Nav from "@/components/Nav";
 import { Marquee } from "@/components/Marquee";
 import { FloatingContact } from "@/components/FloatingContact";
 import { HelpBot } from "@/components/HelpBot";
-import { saveBookingLeadToSheet, submitBookingLeadToGoogleForm } from "@/lib/booking";
+import {
+  isValidName,
+  isValidPhoneNumber,
+  normalizeName,
+  normalizePhoneNumber,
+  saveBookingLeadToSheet,
+  submitBookingLeadToGoogleForm,
+} from "@/lib/booking";
 // Splash loader removed — keep import commented out to avoid unused import errors
 import {
   Dialog,
@@ -256,7 +263,7 @@ const heroStatements = [
 ];
 
 const HERO_TAGLINE = "MSR HOME SERVICES";
-const HERO_STATEMENT_STEP_SECONDS = 2.1;
+const HERO_STATEMENT_STEP_SECONDS = 3.4;
 
 // Nav component moved to src/components/Nav.tsx
 
@@ -274,15 +281,32 @@ function BookingForm({
     if (isSubmitting) return;
 
     const form = e.currentTarget;
-    const name = (form.elements.namedItem("name") as HTMLInputElement).value.trim().slice(0, 100);
-    const phone = (form.elements.namedItem("phone") as HTMLInputElement).value.trim().slice(0, 20);
+    const nameInput = form.elements.namedItem("name") as HTMLInputElement;
+    const phoneInput = form.elements.namedItem("phone") as HTMLInputElement;
+    const name = normalizeName(nameInput.value).trim();
+    const phone = normalizePhoneNumber(phoneInput.value);
     const address = (form.elements.namedItem("address") as HTMLInputElement).value
       .trim()
       .slice(0, 300);
     const selectedService = (form.elements.namedItem("service") as HTMLInputElement).value
       .trim()
       .slice(0, 120);
-    if (!name || !phone) return;
+    nameInput.value = name;
+    phoneInput.value = phone;
+    nameInput.setCustomValidity("");
+    phoneInput.setCustomValidity("");
+
+    if (!isValidName(name)) {
+      nameInput.setCustomValidity("Name must contain only letters and spaces.");
+      nameInput.reportValidity();
+      return;
+    }
+
+    if (!isValidPhoneNumber(phone)) {
+      phoneInput.setCustomValidity("Mobile number must contain exactly 10 digits.");
+      phoneInput.reportValidity();
+      return;
+    }
 
     const serviceName = selectedService || "General enquiry";
     const message = `Hi MSR Home Cleaning,\nService: ${serviceName}\nName: ${name}\nPhone: ${phone}${address ? `\nAddress: ${address}` : ""}`;
@@ -333,15 +357,29 @@ function BookingForm({
         required
         maxLength={100}
         placeholder="Full name"
+        pattern="[A-Za-z ]+"
+        title="Name must contain only letters and spaces."
+        onInput={(e) => {
+          const input = e.currentTarget;
+          input.value = normalizeName(input.value);
+          input.setCustomValidity("");
+        }}
         className="w-full rounded-md border border-input bg-white px-4 py-3 text-sm font-light text-foreground outline-none focus:border-gold"
       />
       <input
         name="phone"
         type="tel"
         required
-        maxLength={20}
-        pattern="[0-9+\-\s()]{7,20}"
+        inputMode="numeric"
+        maxLength={10}
+        pattern="[0-9]{10}"
+        title="Mobile number must contain exactly 10 digits."
         placeholder="Phone number"
+        onInput={(e) => {
+          const input = e.currentTarget;
+          input.value = normalizePhoneNumber(input.value);
+          input.setCustomValidity("");
+        }}
         className="w-full rounded-md border border-input bg-white px-4 py-3 text-sm font-light text-foreground outline-none focus:border-gold"
       />
       <input
@@ -365,13 +403,13 @@ function Hero({ onBook }: { onBook: () => void }) {
   return (
     <section
       id="home"
-      className="relative min-h-[100svh] overflow-hidden bg-[#dff4ff] pt-16 text-navy"
+      className="relative min-h-[100svh] overflow-hidden bg-[#dff4ff] pt-[5.5rem] sm:pt-24 lg:pt-16 text-navy"
     >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.65),transparent_34%),linear-gradient(180deg,rgba(223,244,255,0.98)_0%,rgba(203,233,255,0.96)_55%,rgba(191,226,252,0.98)_100%)]">
         <div className="absolute left-1/2 top-[16%] h-40 w-40 -translate-x-1/2 rounded-full bg-gold/15 blur-3xl sm:h-56 sm:w-56" />
       </div>
-      <div className="relative z-10 mx-auto grid min-h-[calc(100svh-64px)] w-full max-w-7xl lg:grid-cols-[minmax(0,0.94fr)_minmax(0,1.06fr)] lg:gap-10">
-        <div className="flex min-h-0 w-full flex-col justify-center px-4 pb-10 pt-6 text-center sm:px-6 sm:pb-12 sm:pt-8 md:px-8 lg:pb-12 lg:pt-8 xl:px-12">
+      <div className="relative z-10 mx-auto grid min-h-[calc(100svh-88px)] w-full max-w-7xl lg:min-h-[calc(100svh-64px)] lg:grid-cols-[minmax(0,0.94fr)_minmax(0,1.06fr)] lg:gap-10">
+        <div className="flex min-h-0 w-full flex-col justify-center px-4 pb-10 pt-5 text-center sm:px-6 sm:pb-12 sm:pt-6 md:px-8 lg:pb-12 lg:pt-8 xl:px-12">
           <div className="mx-auto flex w-full max-w-[38rem] flex-col items-center gap-8 lg:min-h-[calc(100svh-9rem)] lg:justify-center">
             <div
               className="word-in inline-flex items-center rounded-full border border-sky-300 bg-white/70 px-4 py-2 text-[10px] uppercase text-navy sm:px-5 sm:text-[11px]"
@@ -435,9 +473,8 @@ function Hero({ onBook }: { onBook: () => void }) {
                       muted
                       loop
                       playsInline
-                      preload="metadata"
-                      poster={IMG.heroPoster}
-                      className="aspect-[16/11] w-full bg-sky-100 object-cover sm:aspect-[16/10]"
+                      preload="auto"
+                      className="aspect-[16/11] w-full bg-black object-cover sm:aspect-[16/10]"
                       aria-hidden="true"
                     >
                       <source src={IMG.heroVideo} type="video/mp4" />
@@ -448,7 +485,7 @@ function Hero({ onBook }: { onBook: () => void }) {
                         {heroStatements.map((statement, index) => (
                           <div
                             key={`mobile-video-${statement}`}
-                            className="hero-statement-card hero-statement-card-mobile rounded-2xl border border-sky-100/40 bg-sky-950/62 text-center text-sm text-white shadow-soft backdrop-blur-md"
+                            className="hero-statement-card hero-statement-card-mobile rounded-2xl border border-white/30 bg-white/12 text-center text-sm text-white shadow-[0_18px_40px_rgba(10,18,28,0.18)] backdrop-blur-xl"
                             style={{
                               animationDelay: `${index * HERO_STATEMENT_STEP_SECONDS}s`,
                               animationDuration: `${heroStatements.length * HERO_STATEMENT_STEP_SECONDS}s`,
@@ -475,8 +512,7 @@ function Hero({ onBook }: { onBook: () => void }) {
               muted
               loop
               playsInline
-              preload="metadata"
-              poster={IMG.heroPoster}
+              preload="auto"
               className="hero-media-video aspect-[16/18] w-full object-cover xl:aspect-[16/15]"
               aria-hidden="true"
             >
@@ -488,7 +524,7 @@ function Hero({ onBook }: { onBook: () => void }) {
                 {heroStatements.map((statement, index) => (
                   <div
                     key={`desktop-${statement}`}
-                    className="hero-statement-card rounded-[1.9rem] border border-sky-100/40 bg-sky-950/64 text-center text-base text-white shadow-soft backdrop-blur-md xl:text-lg"
+                    className="hero-statement-card rounded-[1.9rem] border border-white/30 bg-white/12 text-center text-base text-white shadow-[0_24px_54px_rgba(10,18,28,0.2)] backdrop-blur-xl xl:text-lg"
                     style={{
                       animationDelay: `${index * HERO_STATEMENT_STEP_SECONDS}s`,
                       animationDuration: `${heroStatements.length * HERO_STATEMENT_STEP_SECONDS}s`,
