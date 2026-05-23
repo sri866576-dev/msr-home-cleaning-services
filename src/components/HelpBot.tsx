@@ -110,6 +110,13 @@ export function HelpBot({
     },
   ];
 
+  const quickServices = [
+    "Deep Home Cleaning",
+    "Office Cleaning",
+    "Kitchen Deep Cleaning",
+    "Sofa & Carpet Care",
+  ];
+
   const renderContent = () => {
     if (step === "services") {
       return (
@@ -158,22 +165,17 @@ export function HelpBot({
             Pick what you need pricing for and we will guide you to the fastest option.
           </p>
           <div className="mt-4 grid gap-2">
-            <button
-              type="button"
-              onClick={() => openBooking("Deep Home Cleaning")}
-              className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/6 px-4 py-3 text-left text-sm font-light text-white transition-colors hover:border-gold/60 hover:bg-white/10"
-            >
-              <span>Home cleaning quote</span>
-              <ArrowRight className="h-4 w-4 text-gold" />
-            </button>
-            <button
-              type="button"
-              onClick={() => openBooking("Office Cleaning")}
-              className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/6 px-4 py-3 text-left text-sm font-light text-white transition-colors hover:border-gold/60 hover:bg-white/10"
-            >
-              <span>Office cleaning quote</span>
-              <ArrowRight className="h-4 w-4 text-gold" />
-            </button>
+            {quickServices.map((service) => (
+              <button
+                key={service}
+                type="button"
+                onClick={() => openBooking(service)}
+                className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/6 px-4 py-3 text-left text-sm font-light text-white transition-colors hover:border-gold/60 hover:bg-white/10"
+              >
+                <span>{service}</span>
+                <ArrowRight className="h-4 w-4 text-gold" />
+              </button>
+            ))}
             <button
               type="button"
               onClick={() =>
@@ -193,9 +195,21 @@ export function HelpBot({
       return (
         <>
           <p className="text-sm font-light leading-relaxed text-white/70">
-            Want to check service coverage in your area? Choose what you want next.
+            Want to check service coverage in your area? Choose a service below or contact us.
           </p>
           <div className="mt-4 grid gap-2">
+            {quickServices.map((service) => (
+              <button
+                key={service}
+                type="button"
+                onClick={() => openBooking(service)}
+                className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/6 px-4 py-3 text-left text-sm font-light text-white transition-colors hover:border-gold/60 hover:bg-white/10"
+              >
+                <span>{service}</span>
+                <ArrowRight className="h-4 w-4 text-gold" />
+              </button>
+            ))}
+
             <button
               type="button"
               onClick={() => {
@@ -207,6 +221,7 @@ export function HelpBot({
               <span>Open contact section</span>
               <ArrowRight className="h-4 w-4 text-gold" />
             </button>
+
             <button
               type="button"
               onClick={() =>
@@ -248,7 +263,13 @@ export function HelpBot({
   };
 
   return (
-    <div className="fixed bottom-4 left-4 z-50 flex items-end gap-3 sm:bottom-5 sm:left-5">
+    <div
+      className="fixed bottom-4 left-4 z-60 flex items-end gap-3 sm:bottom-5 sm:left-5"
+      onPointerDown={() => {
+        // mark as interacted on any pointer down inside the help bot container
+        hasInteractedRef.current = true;
+      }}
+    >
       {open ? (
         <div className="help-bot-panel w-[min(21rem,calc(100vw-5rem))] rounded-[1.6rem] border border-white/12 bg-[#06101a]/94 p-4 text-white shadow-[0_28px_60px_-28px_rgba(0,0,0,0.65)] backdrop-blur-xl sm:w-[22rem]">
           <div className="flex items-start justify-between gap-3">

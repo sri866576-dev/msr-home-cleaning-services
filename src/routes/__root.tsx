@@ -9,7 +9,7 @@ import {
 } from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
-import logoImage from "../../image.png";
+import logoImage from "../../image-dark-blue.png";
 
 function NotFoundComponent() {
   return (
@@ -68,16 +68,25 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   );
 }
 
+const AD_CLIENT = import.meta.env.VITE_GOOGLE_ADSENSE_CLIENT;
+
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   head: () => ({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "MSR Home Cleaning Specialist | Best Cleaning Service in Hyderabad" },
-      { name: "description", content: "Mr. MSR Home Care Service Group — Hyderabad's premium home, office & deep cleaning specialists. Trained staff, eco-friendly products, 100% satisfaction. Call +91 891 978 0725." },
+      {
+        name: "description",
+        content:
+          "Mr. MSR Home Care Service Group — Hyderabad's premium home, office & deep cleaning specialists. Trained staff, eco-friendly products, 100% satisfaction. Call +91 891 978 0725.",
+      },
       { name: "author", content: "MSR Home Care" },
       { property: "og:title", content: "MSR Home Cleaning Specialist — Hyderabad" },
-      { property: "og:description", content: "Premium home & office cleaning in Hyderabad. Book now." },
+      {
+        property: "og:description",
+        content: "Premium home & office cleaning in Hyderabad. Book now.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -91,6 +100,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: "https://fonts.gstatic.com",
         crossOrigin: "",
       },
+      ...(AD_CLIENT
+        ? [
+            { rel: "preconnect", href: "https://pagead2.googlesyndication.com" },
+            { rel: "preconnect", href: "https://googleads.g.doubleclick.net" },
+          ]
+        : []),
       {
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Roboto:wght@300;400;500;700&display=swap",
@@ -101,6 +116,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       {
         rel: "icon",
+        href: logoImage,
+      },
+      {
+        rel: "apple-touch-icon",
         href: logoImage,
       },
     ],
@@ -116,6 +135,13 @@ function RootShell({ children }: { children: React.ReactNode }) {
     <html lang="en">
       <head>
         <HeadContent />
+        {AD_CLIENT ? (
+          <script
+            async
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${AD_CLIENT}`}
+            crossOrigin="anonymous"
+          ></script>
+        ) : null}
       </head>
       <body>
         {children}

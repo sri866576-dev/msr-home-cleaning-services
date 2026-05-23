@@ -1,7 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import heroVideoFile from "../../6195521-uhd_2160_3840_25fps.mp4";
-import logoImage from "../../Blue Cleaning Services Logo_20260523_142101_0000.png";
+import logoImage from "../../Blue Cleaning Services Logo_dark-blue.png";
 import {
   Star,
   Phone,
@@ -26,10 +26,12 @@ import {
   Menu,
   X,
 } from "lucide-react";
+import Nav from "@/components/Nav";
 import { Marquee } from "@/components/Marquee";
 import { FloatingContact } from "@/components/FloatingContact";
 import { HelpBot } from "@/components/HelpBot";
-import { Splash } from "@/components/Splash";
+import { saveBookingLeadToSheet, submitBookingLeadToGoogleForm } from "@/lib/booking";
+// Splash loader removed — keep import commented out to avoid unused import errors
 import {
   Dialog,
   DialogContent,
@@ -54,33 +56,6 @@ const MAP_LINK = `https://www.google.com/maps/search/?api=1&query=${MAP_QUERY}`;
 const WA_LINK = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(
   "Hi MSR Home Cleaning, I'd like to book a service.",
 )}`;
-const SHEETS_WEBHOOK_URL = import.meta.env.VITE_GOOGLE_SHEETS_WEBHOOK_URL ?? "";
-
-type BookingLead = {
-  submittedAt: string;
-  service: string;
-  name: string;
-  phone: string;
-  address: string;
-  source: string;
-};
-
-async function saveBookingLeadToSheet(lead: BookingLead) {
-  if (!SHEETS_WEBHOOK_URL) {
-    return false;
-  }
-
-  const response = await fetch(SHEETS_WEBHOOK_URL, {
-    method: "POST",
-    body: JSON.stringify(lead),
-  });
-
-  if (!response.ok) {
-    throw new Error(`Google Sheets webhook failed with status ${response.status}`);
-  }
-
-  return true;
-}
 
 const IMG = {
   heroVideo: heroVideoFile,
@@ -281,87 +256,9 @@ const heroStatements = [
 ];
 
 const HERO_TAGLINE = "MSR HOME SERVICES";
+const HERO_STATEMENT_STEP_SECONDS = 2.1;
 
-function Nav({ onBook }: { onBook: () => void }) {
-  const [open, setOpen] = useState(false);
-  const links = [
-    { label: "Home", href: "#home" },
-    { label: "Services", href: "#services" },
-    { label: "About", href: "#about" },
-    { label: "Reviews", href: "#reviews" },
-    { label: "Contact", href: "#contact" },
-  ];
-  return (
-    <header className="fixed top-0 z-40 w-full border-b border-white/8 bg-[#020202]">
-      <div className="flex w-full items-center justify-between px-4 py-3 sm:px-5 md:px-8">
-        <a href="#home" className="flex items-center gap-3">
-          <img
-            src={logoImage}
-            alt="MSR Home Cleaning logo"
-            className="h-10 w-10 object-contain sm:h-11 sm:w-11"
-          />
-          <div className="leading-tight">
-            <div className="font-sans text-[0.84rem] font-light uppercase tracking-[0.22em] text-white sm:text-[0.9rem] md:text-[1.05rem] md:tracking-[0.3em]">
-              <span className="text-gold">MSR</span>
-            </div>
-            <div className="text-[9px] uppercase tracking-[0.22em] text-white/60 sm:text-[10px] md:text-xs">
-              Hyderabad
-            </div>
-          </div>
-        </a>
-        <nav className="hidden items-center gap-7 xl:gap-9 lg:flex">
-          {links.map((l) => (
-            <a
-              key={l.href}
-              href={l.href}
-              className="text-sm font-light tracking-wide text-white/80 hover:text-gold"
-            >
-              {l.label}
-            </a>
-          ))}
-        </nav>
-        <button
-          onClick={onBook}
-          className="hidden items-center gap-2 rounded-full bg-gold px-5 py-2.5 text-sm font-normal text-navy hover:bg-white lg:inline-flex xl:px-6"
-        >
-          Book Now <ArrowRight className="h-4 w-4" />
-        </button>
-        <button
-          onClick={() => setOpen(!open)}
-          className="rounded-md p-2 text-white lg:hidden"
-          aria-label="Toggle menu"
-        >
-          {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-        </button>
-      </div>
-      {open && (
-        <div className="border-t border-white/8 bg-[#020202] lg:hidden">
-          <div className="flex flex-col gap-1 px-4 py-4 sm:px-5">
-            {links.map((l) => (
-              <a
-                key={l.href}
-                href={l.href}
-                onClick={() => setOpen(false)}
-                className="rounded-md px-3 py-2.5 text-sm font-light text-white/80 hover:bg-white/5 hover:text-gold"
-              >
-                {l.label}
-              </a>
-            ))}
-            <button
-              onClick={() => {
-                setOpen(false);
-                onBook();
-              }}
-              className="mt-2 flex items-center justify-center gap-2 rounded-full bg-gold px-5 py-3 text-sm font-normal text-navy"
-            >
-              Book Now <ArrowRight className="h-4 w-4" />
-            </button>
-          </div>
-        </div>
-      )}
-    </header>
-  );
-}
+// Nav component moved to src/components/Nav.tsx
 
 function BookingForm({
   onSuccess,
@@ -395,16 +292,19 @@ function BookingForm({
 
     let savedToSheet = false;
     try {
-      savedToSheet = await saveBookingLeadToSheet({
+      const lead = {
         submittedAt: new Date().toISOString(),
         service: serviceName,
         name,
         phone,
         address,
         source: "website-booking-form",
-      });
+      };
+
+      savedToSheet = await saveBookingLeadToSheet(lead);
+      await submitBookingLeadToGoogleForm(lead);
     } catch (error) {
-      console.error("Could not save booking lead to Google Sheets.", error);
+      console.error("Could not save booking lead.", error);
     } finally {
       setIsSubmitting(false);
     }
@@ -465,17 +365,17 @@ function Hero({ onBook }: { onBook: () => void }) {
   return (
     <section
       id="home"
-      className="relative min-h-[100svh] overflow-hidden bg-black pt-16 text-white"
+      className="relative min-h-[100svh] overflow-hidden bg-[#dff4ff] pt-16 text-navy"
     >
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.08),transparent_32%),linear-gradient(180deg,rgba(0,0,0,0.96)_0%,rgba(0,0,0,1)_100%)]">
-        <div className="absolute left-1/2 top-[16%] h-40 w-40 -translate-x-1/2 rounded-full bg-gold/10 blur-3xl sm:h-56 sm:w-56" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.65),transparent_34%),linear-gradient(180deg,rgba(223,244,255,0.98)_0%,rgba(203,233,255,0.96)_55%,rgba(191,226,252,0.98)_100%)]">
+        <div className="absolute left-1/2 top-[16%] h-40 w-40 -translate-x-1/2 rounded-full bg-gold/15 blur-3xl sm:h-56 sm:w-56" />
       </div>
       <div className="relative z-10 mx-auto grid min-h-[calc(100svh-64px)] w-full max-w-7xl lg:grid-cols-[minmax(0,0.94fr)_minmax(0,1.06fr)] lg:gap-10">
         <div className="flex min-h-0 w-full flex-col justify-center px-4 pb-10 pt-6 text-center sm:px-6 sm:pb-12 sm:pt-8 md:px-8 lg:pb-12 lg:pt-8 xl:px-12">
           <div className="mx-auto flex w-full max-w-[38rem] flex-col items-center gap-8 lg:min-h-[calc(100svh-9rem)] lg:justify-center">
             <div
-              className="word-in inline-flex items-center rounded-full border border-gold/45 bg-white/6 px-4 py-2 text-[10px] uppercase text-white sm:px-5 sm:text-[11px]"
-              style={{ animationDelay: "2.5s" }}
+              className="word-in inline-flex items-center rounded-full border border-sky-300 bg-white/70 px-4 py-2 text-[10px] uppercase text-navy sm:px-5 sm:text-[11px]"
+              style={{ animationDelay: "0.45s" }}
             >
               <span className="flex items-center leading-none tracking-[0.2em]">
                 <Star
@@ -499,8 +399,8 @@ function Hero({ onBook }: { onBook: () => void }) {
               </h1>
               <div className="hero-copy-stack">
                 <p
-                  className="word-in mx-auto mt-4 max-w-[34rem] text-sm font-light leading-relaxed text-white/82 sm:text-base md:text-lg lg:max-w-[31rem]"
-                  style={{ animationDelay: "3.3s" }}
+                  className="word-in mx-auto mt-4 max-w-[34rem] text-sm font-light leading-relaxed text-navy/80 sm:text-base md:text-lg lg:max-w-[31rem]"
+                  style={{ animationDelay: "0.9s" }}
                 >
                   A trained Hyderabad team delivering hotel-grade home and office cleaning since
                   2009. Over 9,500 households served — with eco-friendly products, transparent
@@ -509,7 +409,7 @@ function Hero({ onBook }: { onBook: () => void }) {
 
                 <div
                   className="word-in mt-5 w-full max-w-[30rem]"
-                  style={{ animationDelay: "3.6s" }}
+                  style={{ animationDelay: "1.1s" }}
                 >
                   <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                     <button
@@ -521,7 +421,7 @@ function Hero({ onBook }: { onBook: () => void }) {
 
                     <a
                       href={`tel:${PHONE}`}
-                      className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full border border-white/35 bg-white/5 px-5 py-3 text-sm font-normal text-white hover:bg-white hover:text-navy"
+                      className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full border border-sky-300 bg-white/75 px-5 py-3 text-sm font-normal text-navy hover:bg-navy hover:text-white"
                     >
                       <Phone className="h-4 w-4" fill="currentColor" strokeWidth={0} />
                       {PHONE_DISPLAY}
@@ -529,7 +429,7 @@ function Hero({ onBook }: { onBook: () => void }) {
                   </div>
                 </div>
                 <div className="mt-8 w-full lg:hidden">
-                  <div className="relative overflow-hidden rounded-[1.75rem] border border-white/10 bg-white/4 shadow-elegant">
+                  <div className="relative overflow-hidden rounded-[1.75rem] border border-sky-200 bg-white/55 shadow-elegant">
                     <video
                       autoPlay
                       muted
@@ -537,21 +437,21 @@ function Hero({ onBook }: { onBook: () => void }) {
                       playsInline
                       preload="metadata"
                       poster={IMG.heroPoster}
-                      className="aspect-[16/11] w-full bg-black object-cover sm:aspect-[16/10]"
+                      className="aspect-[16/11] w-full bg-sky-100 object-cover sm:aspect-[16/10]"
                       aria-hidden="true"
                     >
                       <source src={IMG.heroVideo} type="video/mp4" />
                     </video>
-                    <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.2)_0%,rgba(0,0,0,0.32)_35%,rgba(0,0,0,0.62)_100%)]" />
+                    <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(9,58,92,0.08)_0%,rgba(9,58,92,0.22)_35%,rgba(9,58,92,0.44)_100%)]" />
                     <div className="absolute inset-0 flex items-center justify-center px-4">
                       <div className="hero-statement-stage-mobile">
                         {heroStatements.map((statement, index) => (
                           <div
                             key={`mobile-video-${statement}`}
-                            className="hero-statement-card hero-statement-card-mobile rounded-2xl border border-white/15 bg-black/68 text-center text-sm text-white shadow-soft backdrop-blur-md"
+                            className="hero-statement-card hero-statement-card-mobile rounded-2xl border border-sky-100/40 bg-sky-950/62 text-center text-sm text-white shadow-soft backdrop-blur-md"
                             style={{
-                              animationDelay: `${index * 3}s`,
-                              animationDuration: `${heroStatements.length * 3}s`,
+                              animationDelay: `${index * HERO_STATEMENT_STEP_SECONDS}s`,
+                              animationDuration: `${heroStatements.length * HERO_STATEMENT_STEP_SECONDS}s`,
                             }}
                           >
                             <span className="h-2.5 w-2.5 shrink-0 rounded-full bg-gold shadow-[0_0_14px_rgba(83,211,255,0.6)]" />
@@ -569,7 +469,7 @@ function Hero({ onBook }: { onBook: () => void }) {
           </div>
         </div>
         <div className="hidden lg:flex lg:min-h-[calc(100svh-64px)] lg:items-center lg:justify-end lg:pr-8 xl:pr-12">
-          <div className="relative w-full max-w-[38rem] overflow-hidden rounded-[2rem] border border-white/10 bg-white/4 shadow-elegant">
+          <div className="relative w-full max-w-[38rem] overflow-hidden rounded-[2rem] border border-sky-200 bg-white/55 shadow-elegant">
             <video
               autoPlay
               muted
@@ -582,16 +482,16 @@ function Hero({ onBook }: { onBook: () => void }) {
             >
               <source src={IMG.heroVideo} type="video/mp4" />
             </video>
-            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.18)_0%,rgba(0,0,0,0.28)_34%,rgba(0,0,0,0.58)_100%)]" />
+            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(9,58,92,0.08)_0%,rgba(9,58,92,0.22)_34%,rgba(9,58,92,0.42)_100%)]" />
             <div className="absolute inset-0 flex items-center justify-center px-8">
               <div className="hero-statement-stage">
                 {heroStatements.map((statement, index) => (
                   <div
                     key={`desktop-${statement}`}
-                    className="hero-statement-card rounded-[1.9rem] border border-white/15 bg-black/70 text-center text-base text-white shadow-soft backdrop-blur-md xl:text-lg"
+                    className="hero-statement-card rounded-[1.9rem] border border-sky-100/40 bg-sky-950/64 text-center text-base text-white shadow-soft backdrop-blur-md xl:text-lg"
                     style={{
-                      animationDelay: `${index * 3}s`,
-                      animationDuration: `${heroStatements.length * 3}s`,
+                      animationDelay: `${index * HERO_STATEMENT_STEP_SECONDS}s`,
+                      animationDuration: `${heroStatements.length * HERO_STATEMENT_STEP_SECONDS}s`,
                     }}
                   >
                     <span className="h-3.5 w-3.5 shrink-0 rounded-full bg-gold shadow-[0_0_18px_rgba(83,211,255,0.55)]" />
@@ -1042,7 +942,7 @@ function Footer() {
               <img
                 src={logoImage}
                 alt="MSR Home Cleaning logo"
-                className="h-11 w-11 object-contain"
+                className="brand-logo-dark-blue h-12 w-12 object-contain"
               />
               <div className="leading-tight">
                 <div className="font-display text-lg">
@@ -1078,9 +978,9 @@ function Footer() {
             <ul className="mt-4 space-y-2 text-sm font-light text-white/70">
               {services.map((s) => (
                 <li key={s.title}>
-                  <a href="#services" className="hover:text-gold">
+                  <Link to="/services" className="hover:text-gold">
                     {s.title}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -1158,20 +1058,89 @@ function Index() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Nav onBook={openBook} />
+      {/* Splash loader removed */}
       <main>
         <Hero onBook={openBook} />
         <Features />
-        <Services onBook={openBook} />
-        <About />
+
+        <section className="bg-secondary py-20 md:py-28">
+          <div className="mx-auto max-w-7xl px-4 md:px-8 text-center">
+            <p className="text-[11px] font-normal uppercase tracking-[0.3em] text-gold">
+              Our Services
+            </p>
+            <h2 className="mt-4 font-display text-3xl text-foreground md:text-5xl">
+              Specialised care for every space
+            </h2>
+            <p className="mt-4 font-light text-muted-foreground">
+              From homes to offices — pick a service or let us tailor a plan for you.
+            </p>
+            <div className="mt-6 flex w-full flex-col items-center justify-center gap-3 sm:flex-row">
+              <Link
+                to="/services"
+                className="inline-flex w-full items-center justify-center rounded-full bg-gold px-6 py-3 text-sm font-normal text-navy sm:min-w-[12rem] sm:w-auto"
+              >
+                View Services
+              </Link>
+              <Link
+                to="/contact"
+                className="inline-flex w-full items-center justify-center rounded-full bg-navy px-6 py-3 text-sm font-normal text-white hover:bg-gold hover:text-navy sm:min-w-[12rem] sm:w-auto"
+              >
+                Get in touch
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        <section className="bg-background py-20 md:py-28">
+          <div className="mx-auto max-w-7xl px-4 md:px-8 text-center">
+            <p className="text-[11px] font-normal uppercase tracking-[0.3em] text-gold">
+              Who We Are
+            </p>
+            <h2 className="mt-4 font-display text-3xl text-foreground md:text-5xl">
+              Honest cleaning, delivered with care
+            </h2>
+            <p className="mt-4 font-light text-muted-foreground">
+              MSR Home Cleaning is a trusted local team delivering hotel-grade home and office
+              cleaning since 2009.
+            </p>
+            <div className="mt-6 flex w-full flex-col items-center justify-center gap-3 sm:flex-row">
+              <Link
+                to="/about"
+                className="inline-flex w-full items-center justify-center rounded-full bg-gold px-6 py-3 text-sm font-normal text-navy sm:min-w-[12rem] sm:w-auto"
+              >
+                Learn more
+              </Link>
+              <Link
+                to="/contact"
+                className="inline-flex w-full items-center justify-center rounded-full bg-navy px-6 py-3 text-sm font-normal text-white hover:bg-gold hover:text-navy sm:min-w-[12rem] sm:w-auto"
+              >
+                Get in touch
+              </Link>
+            </div>
+          </div>
+        </section>
+
         <WhyChoose />
         <Reviews />
-        <Contact onBook={openBook} />
+
+        <section className="bg-secondary py-20 md:py-28">
+          <div className="mx-auto max-w-7xl px-4 md:px-8 text-center">
+            <p className="text-[11px] font-normal uppercase tracking-[0.3em] text-gold">Contact</p>
+            <h2 className="mt-4 font-display text-3xl text-foreground md:text-5xl">Get in touch</h2>
+            <p className="mt-4 font-light text-muted-foreground">
+              Quick replies, same-day slots in many areas.{" "}
+              <Link to="/contact" className="text-gold">
+                Contact us
+              </Link>
+            </p>
+          </div>
+        </section>
+
         <LocationMap />
       </main>
       <Footer />
       <HelpBot onBook={openBook} />
       <FloatingContact />
-      <Splash />
 
       <Dialog open={bookOpen} onOpenChange={setBookOpen}>
         <DialogContent showCloseButton={false} className="border-0 bg-white p-0 sm:max-w-md">
