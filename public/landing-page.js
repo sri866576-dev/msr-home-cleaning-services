@@ -1,12 +1,14 @@
+// Bundled landing page script with Sheets webhook support
 (function () {
   const STORAGE_KEY = "msr-landing-lead";
+  const SHEETS_WEBHOOK_URL =
+    "https://script.google.com/macros/s/AKfycbwRT5DlHoDNgy2-wFiRQKUWFeTvGxRyLOkU9LCAdRisdKhJNrGSag7l0XZw8Iw3WA6wLA/exec";
   const form = document.getElementById("landing-lead-form");
   const nameInput = document.getElementById("lead-name");
   const phoneInput = document.getElementById("lead-phone");
   const serviceInput = document.getElementById("service-interest");
   const errorMessage = document.getElementById("form-error");
-  const serviceBanner = document.getElementById("selected-service-banner");
-  const serviceText = document.getElementById("selected-service-text");
+  const serviceTitle = document.getElementById("lead-service-title");
   const serviceButtons = document.querySelectorAll("[data-service]");
   const yearTargets = document.querySelectorAll("#current-year");
 
@@ -21,27 +23,62 @@
       .trimStart()
       .slice(0, 100);
 
-  const normalizePhone = (value) => value.replace(/\D/g, "").slice(0, 10);
+  const normalizePhone = (value) => {
+    const digits = value.replace(/\D/g, "").slice(0, 10);
+    return digits;
+  };
+
+  const isValidPhone = (value) => /^\d{10}$/.test(value);
+
+  const saveLeadToSheet = async (lead) => {
+    if (!SHEETS_WEBHOOK_URL) {
+      return false;
+    }
+
+    await fetch(SHEETS_WEBHOOK_URL, {
+      method: "POST",
+      mode: "no-cors",
+      body: JSON.stringify(lead),
+    });
+
+    return true;
+  };
 
   const updateSelectedService = (serviceName) => {
-    if (!serviceInput || !serviceBanner || !serviceText) {
+    if (!serviceInput || !serviceTitle) {
       return;
     }
 
     const nextService = serviceName && serviceName.trim() ? serviceName.trim() : "General Cleaning";
     serviceInput.value = nextService;
-    serviceText.textContent = nextService;
-    serviceBanner.hidden = false;
+    serviceTitle.textContent = nextService;
   };
 
   serviceButtons.forEach((button) => {
-    button.addEventListener("click", () => {
+    const selectService = () => {
       const serviceName = button.getAttribute("data-service") || "General Cleaning";
       updateSelectedService(serviceName);
       document.getElementById("lead-form")?.scrollIntoView({ behavior: "smooth", block: "start" });
       nameInput?.focus();
+    };
+
+    button.addEventListener("click", selectService);
+    button.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        selectService();
+      }
     });
   });
+
+  if (serviceInput) {
+    serviceInput.addEventListener("change", () => {
+      updateSelectedService(serviceInput.value);
+      if (errorMessage) {
+        errorMessage.textContent = "";
+      }
+    });
+  }
 
   if (nameInput) {
     nameInput.addEventListener("input", () => {
@@ -64,7 +101,7 @@
   if (form && nameInput && phoneInput && serviceInput) {
     updateSelectedService(serviceInput.value);
 
-    form.addEventListener("submit", (event) => {
+    form.addEventListener("submit", async (event) => {
       event.preventDefault();
 
       const name = normalizeName(nameInput.value).trim();
@@ -80,10 +117,16 @@
         return;
       }
 
-      if (!/^\d{10}$/.test(phone)) {
+      if (!isValidPhone(phone)) {
         errorMessage.textContent = "Please enter a valid 10-digit phone number.";
         phoneInput.focus();
         return;
+      }
+
+      const submitButton = form.querySelector('button[type="submit"]');
+      if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.textContent = "Saving Request...";
       }
 
       sessionStorage.setItem(
@@ -95,6 +138,27 @@
           submittedAt: new Date().toISOString(),
         }),
       );
+
+      try {
+        await saveLeadToSheet({
+          submittedAt: new Date().toISOString(),
+          service,
+          name,
+          phone,
+          address: "",
+          source: "landing-page",
+        });
+      } catch (error) {
+        if (errorMessage) {
+          errorMessage.textContent = "We could not save your request right now. Please try again.";
+        }
+
+        if (submitButton) {
+          submitButton.disabled = false;
+          submitButton.textContent = "Book Free Consultation";
+        }
+        return;
+      }
 
       window.location.href = "thank-you.html";
     });
