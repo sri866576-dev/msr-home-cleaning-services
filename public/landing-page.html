@@ -4,11 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>
-      Deep Cleaning Services Hyderabad | Home & Office Cleaning Company | MSR Home Cleaning
+      Deep Cleaning Services Hyderabad | Home & Office Cleaning Company | Mr. MSR Home Cleaning
     </title>
     <meta
       name="description"
-      content="Book deep cleaning services from a trusted office cleaning company in Hyderabad. MSR Home Cleaning offers home cleaning services Hyderabad families trust, house cleaning services Hyderabad homes need, and fast local support."
+      content="Book deep cleaning services from a trusted office cleaning company in Hyderabad. Mr. MSR Home Cleaning offers home cleaning services Hyderabad families trust, house cleaning services Hyderabad homes need, and fast local support."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -19,20 +19,15 @@
     <link rel="stylesheet" href="landing-page.css" />
   </head>
   <body class="lp-body">
-    <header class="lp-site-header">
+    <header class="lp-site-header lp-site-header-edge">
       <div class="lp-container lp-header-row">
-        <a class="lp-brand" href="/">
-          <img
-            src="Blue Cleaning Services Logo_dark-blue.png"
-            alt="MSR Home Cleaning logo"
-            class="lp-brand-logo"
-          />
+        <a class="lp-brand lp-brand-text" href="#top">
           <span class="lp-brand-copy">
-            <span class="lp-brand-title">MSR Home Cleaning</span>
-            <span class="lp-brand-subtitle">Hyderabad Cleaning Services</span>
+            <span class="lp-brand-title">Mr. MSR Home Cleaning</span>
+            <span class="lp-brand-subtitle">Hyd</span>
           </span>
         </a>
-        <a class="lp-header-call" href="tel:+918919780725">Call 8919780725</a>
+        <a class="lp-header-call" href="#lead-form">Book Now</a>
       </div>
     </header>
 
@@ -45,7 +40,7 @@
               Book deep cleaning services from a reliable office cleaning company in Hyderabad.
             </h1>
             <p class="lp-hero-text">
-              MSR Home Cleaning delivers home cleaning services Hyderabad families trust and house
+              Mr. MSR Home Cleaning delivers home cleaning services Hyderabad families trust and house
               cleaning services Hyderabad homes, apartments, and offices need for a cleaner,
               healthier space.
             </p>
@@ -66,15 +61,11 @@
 
           <aside class="lp-form-card" id="lead-form">
             <p class="lp-form-eyebrow">Request a Callback</p>
-            <h2 class="lp-form-title">Talk to our cleaning team today</h2>
+            <h2 class="lp-form-title" id="lead-service-title">General Cleaning</h2>
             <p class="lp-form-text">
-              Fill in your name and phone number. We will contact you shortly.
+              Choose a service, fill in your details, and our team will contact you shortly.
             </p>
-            <div class="lp-selected-service" id="selected-service-banner" hidden>
-              Selected Service: <span id="selected-service-text">General Cleaning</span>
-            </div>
             <form class="lp-form" id="landing-lead-form" novalidate>
-              <input type="hidden" name="service" id="service-interest" value="General Cleaning" />
               <label class="lp-field">
                 <span class="lp-field-label">Name</span>
                 <input
@@ -102,6 +93,23 @@
                   required
                 />
               </label>
+              <label class="lp-field">
+                <span class="lp-field-label">Service</span>
+                <select class="lp-input lp-select" name="service" id="service-interest" required>
+                  <option value="General Cleaning">General Cleaning</option>
+                  <option value="Solar Panel Cleaning">Solar Panel Cleaning</option>
+                  <option value="Deep Home Cleaning">Deep Home Cleaning</option>
+                  <option value="Professional Painting Services">Professional Painting Services</option>
+                  <option value="Pest Control Services">Pest Control Services</option>
+                  <option value="Office Cleaning">Office Cleaning</option>
+                  <option value="Water Tank Cleaning">Water Tank Cleaning</option>
+                  <option value="Washroom Cleaning">Washroom Cleaning</option>
+                  <option value="Kitchen Deep Cleaning">Kitchen Deep Cleaning</option>
+                  <option value="Sofa &amp; Carpet Care">Sofa &amp; Carpet Care</option>
+                  <option value="Mattress Cleaning">Mattress Cleaning</option>
+                  <option value="Book by Room">Book by Room</option>
+                </select>
+              </label>
               <p class="lp-form-error" id="form-error" aria-live="polite"></p>
               <button class="lp-btn lp-btn-primary lp-btn-full" type="submit">
                 Book Free Consultation
@@ -127,28 +135,40 @@
           </div>
 
           <div class="lp-service-grid">
-            <article class="lp-service-card">
-              <span class="lp-service-icon">SP</span>
+            <article class="lp-service-card" data-service="Solar Panel Cleaning" role="button" tabindex="0">
+              <img
+                class="lp-service-image"
+                src="https://images.pexels.com/photos/9875441/pexels-photo-9875441.jpeg?auto=compress&cs=tinysrgb&w=900"
+                alt="Technician carrying a solar panel for cleaning and maintenance"
+              />
               <h3>Solar Panel Cleaning</h3>
-              <p>Specialized cleaning to help improve solar panel efficiency and performance.</p>
+              <p>Careful rooftop panel cleaning that helps maintain cleaner surfaces and stronger day-to-day output.</p>
               <button class="lp-card-link" type="button" data-service="Solar Panel Cleaning">
                 Request This Service
               </button>
             </article>
 
-            <article class="lp-service-card">
-              <span class="lp-service-icon">DH</span>
+            <article class="lp-service-card" data-service="Deep Home Cleaning" role="button" tabindex="0">
+              <img
+                class="lp-service-image"
+                src="https://images.pexels.com/photos/4239031/pexels-photo-4239031.jpeg?auto=compress&cs=tinysrgb&w=900"
+                alt="Cleaner wiping a glass surface during a home deep cleaning service"
+              />
               <h3>Deep Home Cleaning</h3>
-              <p>Complete room-by-room cleaning for bedrooms, floors, kitchens, bathrooms, and more.</p>
+              <p>Detailed room-by-room cleaning for kitchens, bathrooms, floors, bedrooms, and high-use spaces.</p>
               <button class="lp-card-link" type="button" data-service="Deep Home Cleaning">
                 Request This Service
               </button>
             </article>
 
-            <article class="lp-service-card">
-              <span class="lp-service-icon">PA</span>
+            <article class="lp-service-card" data-service="Professional Painting Services" role="button" tabindex="0">
+              <img
+                class="lp-service-image"
+                src="https://images.pexels.com/photos/14613134/pexels-photo-14613134.png?auto=compress&cs=tinysrgb&w=900"
+                alt="Paint roller tray used for professional painting services"
+              />
               <h3>Professional Painting Services</h3>
-              <p>Interior and exterior painting support for refresh projects and full repaint work.</p>
+              <p>Interior and exterior painting support for refresh projects, touch-ups, and full repaint work.</p>
               <button
                 class="lp-card-link"
                 type="button"
@@ -158,73 +178,105 @@
               </button>
             </article>
 
-            <article class="lp-service-card">
-              <span class="lp-service-icon">PC</span>
+            <article class="lp-service-card" data-service="Pest Control Services" role="button" tabindex="0">
+              <img
+                class="lp-service-image"
+                src="https://images.pexels.com/photos/4176550/pexels-photo-4176550.jpeg?auto=compress&cs=tinysrgb&w=900"
+                alt="Service team working inside a modern home interior"
+              />
               <h3>Pest Control Services</h3>
-              <p>Practical pest treatment options for homes, apartments, and workspaces.</p>
+              <p>Targeted pest treatment plans for homes, apartments, offices, and regularly used spaces.</p>
               <button class="lp-card-link" type="button" data-service="Pest Control Services">
                 Request This Service
               </button>
             </article>
 
-            <article class="lp-service-card">
-              <span class="lp-service-icon">OC</span>
+            <article class="lp-service-card" data-service="Office Cleaning" role="button" tabindex="0">
+              <img
+                class="lp-service-image"
+                src="https://images.pexels.com/photos/10567236/pexels-photo-10567236.jpeg?auto=compress&cs=tinysrgb&w=900"
+                alt="Office cleaning team preparing a professional workspace"
+              />
               <h3>Office Cleaning</h3>
-              <p>Dependable office cleaning company support for cleaner, more welcoming workplaces.</p>
+              <p>Reliable office cleaning support for tidy desks, shared spaces, meeting rooms, and daily operations.</p>
               <button class="lp-card-link" type="button" data-service="Office Cleaning">
                 Request This Service
               </button>
             </article>
 
-            <article class="lp-service-card">
-              <span class="lp-service-icon">WT</span>
+            <article class="lp-service-card" data-service="Water Tank Cleaning" role="button" tabindex="0">
+              <img
+                class="lp-service-image"
+                src="https://images.pexels.com/photos/35464095/pexels-photo-35464095.jpeg?auto=compress&cs=tinysrgb&w=900"
+                alt="Water tank cleaning and maintenance equipment"
+              />
               <h3>Water Tank Cleaning</h3>
-              <p>Hygienic water tank cleaning to help maintain cleaner water storage conditions.</p>
+              <p>Hygienic tank cleaning that helps maintain safer storage conditions and cleaner water systems.</p>
               <button class="lp-card-link" type="button" data-service="Water Tank Cleaning">
                 Request This Service
               </button>
             </article>
 
-            <article class="lp-service-card">
-              <span class="lp-service-icon">WR</span>
+            <article class="lp-service-card" data-service="Washroom Cleaning" role="button" tabindex="0">
+              <img
+                class="lp-service-image"
+                src="https://images.pexels.com/photos/4239068/pexels-photo-4239068.jpeg?auto=compress&cs=tinysrgb&w=900"
+                alt="Clean modern bathroom prepared after washroom cleaning"
+              />
               <h3>Washroom Cleaning</h3>
-              <p>Deep washroom cleaning for fittings, tiles, corners, and high-use bathroom spaces.</p>
+              <p>Deep washroom cleaning for tiles, fittings, corners, and other high-use bathroom surfaces.</p>
               <button class="lp-card-link" type="button" data-service="Washroom Cleaning">
                 Request This Service
               </button>
             </article>
 
-            <article class="lp-service-card">
-              <span class="lp-service-icon">KD</span>
+            <article class="lp-service-card" data-service="Kitchen Deep Cleaning" role="button" tabindex="0">
+              <img
+                class="lp-service-image"
+                src="https://images.pexels.com/photos/9462314/pexels-photo-9462314.jpeg?auto=compress&cs=tinysrgb&w=900"
+                alt="Deep cleaned kitchen countertop and cabinetry"
+              />
               <h3>Kitchen Deep Cleaning</h3>
-              <p>Degreasing and sanitising for cabinets, counters, sinks, and cooking areas.</p>
+              <p>Focused degreasing and sanitising for cabinets, counters, sinks, and everyday cooking zones.</p>
               <button class="lp-card-link" type="button" data-service="Kitchen Deep Cleaning">
                 Request This Service
               </button>
             </article>
 
-            <article class="lp-service-card">
-              <span class="lp-service-icon">SC</span>
+            <article class="lp-service-card" data-service="Sofa &amp; Carpet Care" role="button" tabindex="0">
+              <img
+                class="lp-service-image"
+                src="https://images.pexels.com/photos/4401535/pexels-photo-4401535.jpeg"
+                alt="Living room sofa and rug prepared for deep fabric care"
+              />
               <h3>Sofa &amp; Carpet Care</h3>
-              <p>Fabric-safe cleaning for sofas, rugs, and carpets that need freshening up.</p>
+              <p>Fabric-safe sofa and carpet care that helps lift dirt, odours, and everyday surface buildup.</p>
               <button class="lp-card-link" type="button" data-service="Sofa &amp; Carpet Care">
                 Request This Service
               </button>
             </article>
 
-            <article class="lp-service-card">
-              <span class="lp-service-icon">MC</span>
+            <article class="lp-service-card" data-service="Mattress Cleaning" role="button" tabindex="0">
+              <img
+                class="lp-service-image"
+                src="https://images.pexels.com/photos/14675103/pexels-photo-14675103.jpeg?auto=compress&cs=tinysrgb&w=900"
+                alt="Fresh bed and mattress prepared after cleaning"
+              />
               <h3>Mattress Cleaning</h3>
-              <p>Dust, surface dirt, and allergen removal for healthier sleeping spaces.</p>
+              <p>Dust and surface-cleaning support for mattresses that need a fresher, healthier sleeping feel.</p>
               <button class="lp-card-link" type="button" data-service="Mattress Cleaning">
                 Request This Service
               </button>
             </article>
 
-            <article class="lp-service-card">
-              <span class="lp-service-icon">BR</span>
+            <article class="lp-service-card" data-service="Book by Room" role="button" tabindex="0">
+              <img
+                class="lp-service-image"
+                src="https://images.pexels.com/photos/6794931/pexels-photo-6794931.jpeg"
+                alt="Bright home interior ready for room-by-room cleaning"
+              />
               <h3>Book by Room</h3>
-              <p>Select only the rooms you need and get a cleaning plan matched to your home.</p>
+              <p>Select only the rooms you need and get a practical cleaning plan matched to your home.</p>
               <button class="lp-card-link" type="button" data-service="Book by Room">
                 Request This Service
               </button>
@@ -320,12 +372,12 @@
     <footer class="lp-site-footer">
       <div class="lp-container lp-footer-grid">
         <div>
-          <div class="lp-footer-brand">
-            <img
-              src="Blue Cleaning Services Logo_dark-blue.png"
-              alt="MSR Home Cleaning logo"
-              class="lp-footer-logo"
-            />
+            <div class="lp-footer-brand">
+              <img
+                src="Blue Cleaning Services Logo_dark-blue.png"
+                alt="MSR Home Cleaning logo"
+                class="lp-footer-logo lp-footer-logo-white"
+              />
             <div>
               <p class="lp-footer-title">Mr. MSR Home Cleaning</p>
               <p class="lp-footer-text">Home and office cleaning services in Hyderabad</p>
