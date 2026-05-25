@@ -32,16 +32,27 @@
 
   const saveLeadToSheet = async (lead) => {
     if (!SHEETS_WEBHOOK_URL) {
+      console.warn("No SHEETS_WEBHOOK_URL configured");
       return false;
     }
 
-    await fetch(SHEETS_WEBHOOK_URL, {
-      method: "POST",
-      mode: "no-cors",
-      body: JSON.stringify(lead),
-    });
+    try {
+      const response = await fetch(SHEETS_WEBHOOK_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(lead),
+      });
 
-    return true;
+      // With no-cors, response.ok is always false - but fetch itself succeeds
+      console.log("Form submitted to Google Sheets");
+      return true;
+    } catch (error) {
+      console.error("Error submitting to Google Sheets:", error);
+      throw error;
+    }
   };
 
   const updateSelectedService = (serviceName) => {
