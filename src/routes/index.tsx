@@ -1133,7 +1133,7 @@ function Footer() {
               </li>
               <li className="flex gap-2">
                 <Mail className="h-4 w-4 shrink-0 text-gold" />
-                <span>info@msrhomecleaning.com</span>
+                <span>msrvmcm@gmail.com</span>
               </li>
             </ul>
           </div>
