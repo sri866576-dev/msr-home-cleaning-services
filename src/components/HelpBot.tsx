@@ -103,10 +103,10 @@ export function HelpBot({
       action: () => setStep("areas"),
     },
     {
-      label: "Extra services",
+      label: "Emergency cleaning",
       icon: MessageCircle,
       action: () =>
-        openWhatsApp("Hi MSR Home Cleaning, I need help with an extra cleaning service."),
+        openWhatsApp("Hi Mr. MSR Home Cleaning, I need emergency cleaning service today."),
     },
   ];
 
@@ -115,6 +115,20 @@ export function HelpBot({
     "Office Cleaning",
     "Kitchen Deep Cleaning",
     "Sofa & Carpet Care",
+  ];
+
+  const pricingServices = [
+    "Solar Panel Cleaning",
+    "Professional Painting Services",
+    "Pest Control Services",
+    "Water Tank Cleaning",
+  ];
+
+  const areaServices = [
+    "Banjara Hills",
+    "Jubilee Hills",
+    "Gachibowli",
+    "Hitech City",
   ];
 
   const renderContent = () => {
@@ -145,7 +159,7 @@ export function HelpBot({
               type="button"
               onClick={() =>
                 openWhatsApp(
-                  "Hi MSR Home Cleaning, I need a service that is not listed in the quick options.",
+                  "Hi Mr. MSR Home Cleaning, I need a service that is not listed in the quick options.",
                 )
               }
               className="flex items-center justify-between rounded-2xl border border-white/10 bg-whatsapp/85 px-4 py-3 text-left text-sm font-normal text-white transition-colors hover:bg-whatsapp"
@@ -165,7 +179,7 @@ export function HelpBot({
             Pick what you need pricing for and we will guide you to the fastest option.
           </p>
           <div className="mt-4 grid gap-2">
-            {quickServices.map((service) => (
+            {pricingServices.map((service) => (
               <button
                 key={service}
                 type="button"
@@ -179,7 +193,7 @@ export function HelpBot({
             <button
               type="button"
               onClick={() =>
-                openWhatsApp("Hi MSR Home Cleaning, I need a custom quote for a service.")
+                openWhatsApp("Hi Mr. MSR Home Cleaning, I need a custom quote for a service.")
               }
               className="flex items-center justify-between rounded-2xl border border-white/10 bg-whatsapp/85 px-4 py-3 text-left text-sm font-normal text-white transition-colors hover:bg-whatsapp"
             >
@@ -195,17 +209,21 @@ export function HelpBot({
       return (
         <>
           <p className="text-sm font-light leading-relaxed text-white/70">
-            Want to check service coverage in your area? Choose a service below or contact us.
+            Want to check service coverage in your area? Choose from popular areas below.
           </p>
           <div className="mt-4 grid gap-2">
-            {quickServices.map((service) => (
+            {areaServices.map((area) => (
               <button
-                key={service}
+                key={area}
                 type="button"
-                onClick={() => openBooking(service)}
+                onClick={() =>
+                  openWhatsApp(
+                    `Hi Mr. MSR Home Cleaning, do you serve ${area}? I am interested in booking a service.`,
+                  )
+                }
                 className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/6 px-4 py-3 text-left text-sm font-light text-white transition-colors hover:border-gold/60 hover:bg-white/10"
               >
-                <span>{service}</span>
+                <span>{area}</span>
                 <ArrowRight className="h-4 w-4 text-gold" />
               </button>
             ))}
@@ -225,7 +243,7 @@ export function HelpBot({
             <button
               type="button"
               onClick={() =>
-                openWhatsApp("Hi MSR Home Cleaning, can you confirm whether you serve my area?")
+                openWhatsApp("Hi Mr. MSR Home Cleaning, can you confirm whether you serve my area?")
               }
               className="flex items-center justify-between rounded-2xl border border-white/10 bg-whatsapp/85 px-4 py-3 text-left text-sm font-normal text-white transition-colors hover:bg-whatsapp"
             >

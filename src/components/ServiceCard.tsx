@@ -55,7 +55,7 @@ export default function ServiceCard({ s }: { s: Service }) {
     const formUrl = buildGoogleFormPrefillUrl(lead);
 
     const WHATSAPP_PHONE = "918919780725";
-    const message = `Hi MSR Home Cleaning,\nService: ${s.title}\nName: ${lead.name}\nPhone: ${lead.phone}`;
+    const message = `Hi Mr. MSR Home Cleaning,\nService: ${s.title}\nName: ${lead.name}\nPhone: ${lead.phone}`;
     const whatsappUrl = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(message)}`;
 
     setSavedToSheet(sheetSaved);
@@ -71,9 +71,9 @@ export default function ServiceCard({ s }: { s: Service }) {
   };
 
   return (
-    <article className="group border border-border bg-card p-7">
-      <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-md bg-navy text-gold">
-        <s.icon className="h-7 w-7" strokeWidth={1.4} />
+    <article className="group border border-border bg-card p-4 sm:p-7">
+      <div className="mb-5 flex h-10 w-10 sm:h-14 sm:w-14 items-center justify-center rounded-md bg-navy text-gold">
+        <s.icon className="h-5 w-5 sm:h-7 sm:w-7" strokeWidth={1.4} />
       </div>
       <h3 className="font-display text-base text-foreground">{s.title}</h3>
       <p className="mt-2 text-xs font-light leading-relaxed text-muted-foreground">{s.desc}</p>

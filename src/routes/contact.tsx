@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { Phone, MessageCircle, MapPin, Clock, ArrowRight } from "lucide-react";
+import { Phone, MessageCircle, MapPin, Clock, ArrowRight, CheckCircle, AlertCircle } from "lucide-react";
 import BackButton from "@/components/BackButton";
 import Nav from "@/components/Nav";
 import { isValidName, isValidPhoneNumber, normalizeName, normalizePhoneNumber } from "@/lib/booking";
@@ -8,17 +8,18 @@ import { isValidName, isValidPhoneNumber, normalizeName, normalizePhoneNumber } 
 const PHONE = "+918919780725";
 const PHONE_DISPLAY = "8919780725";
 const WHATSAPP_PHONE = "918919780725";
-const WA_LINK = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent("Hi MSR Home Cleaning, I'd like to get a quote.")}`;
+const WA_LINK = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent("Hi Mr. MSR Home Cleaning, I'd like to get a quote.")}`;
 const ADDRESS = "House no 3-159, Government School Kamla Nagar Colony, Jillelaguda, Hyderabad, 500097";
 const MAP_LINK = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(ADDRESS)}`;
+const SHEETS_WEBHOOK_URL = import.meta.env.VITE_GOOGLE_SHEETS_WEBHOOK_URL || "";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
-      { title: "Contact — MSR Home Cleaning" },
-      { name: "description", content: "Contact MSR Home Cleaning — call, WhatsApp, or visit our location in Hyderabad." },
-      { property: "og:title", content: "Contact — MSR Home Cleaning" },
-      { property: "og:description", content: "Get in touch with MSR Home Cleaning for bookings and enquiries." },
+      { title: "Contact — Mr. MSR Home Cleaning" },
+      { name: "description", content: "Contact Mr. MSR Home Cleaning — call, WhatsApp, or visit our location in Hyderabad." },
+      { property: "og:title", content: "Contact — Mr. MSR Home Cleaning" },
+      { property: "og:description", content: "Get in touch with Mr. MSR Home Cleaning for bookings and enquiries." },
     ],
     links: [{ rel: "canonical", href: "/contact" }],
   }),
@@ -27,10 +28,13 @@ export const Route = createFileRoute("/contact")({
 
 function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
+  const [statusMessage, setStatusMessage] = useState("");
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (isSubmitting) return;
+    
     const form = e.currentTarget as HTMLFormElement;
     const nameInput = form.elements.namedItem("name") as HTMLInputElement;
     const phoneInput = form.elements.namedItem("phone") as HTMLInputElement;
@@ -38,6 +42,7 @@ function ContactPage() {
     const phone = normalizePhoneNumber(phoneInput?.value ?? "");
     const service = (form.elements.namedItem("service") as HTMLSelectElement)?.value ?? "General Enquiry";
     const message = (form.elements.namedItem("message") as HTMLTextAreaElement)?.value?.trim() ?? "";
+    
     nameInput.value = name;
     phoneInput.value = phone;
     nameInput.setCustomValidity("");
@@ -55,12 +60,52 @@ function ContactPage() {
       return;
     }
 
-    const text = `Hi MSR Home Cleaning,%0AService: ${service}%0AName: ${name}%0APhone: ${phone}%0AMessage: ${message}`;
-    const url = `https://wa.me/${WHATSAPP_PHONE}?text=${text}`;
-
     setIsSubmitting(true);
-    window.open(url, "_blank", "noopener");
-    setTimeout(() => setIsSubmitting(false), 800);
+    setSubmitStatus("idle");
+
+    try {
+      if (SHEETS_WEBHOOK_URL) {
+        const submissionData = {
+          submittedAt: new Date().toISOString(),
+          service,
+          name,
+          phone,
+          address: "",
+          message,
+          source: "contact-form",
+        };
+
+        await fetch(SHEETS_WEBHOOK_URL, {
+          method: "POST",
+          mode: "no-cors",
+          body: JSON.stringify(submissionData),
+        });
+      }
+
+      setSubmitStatus("success");
+      setStatusMessage("Details saved! Opening WhatsApp...");
+      
+      const text = `Hi Mr. MSR Home Cleaning,%0AService: ${service}%0AName: ${name}%0APhone: ${phone}%0AMessage: ${message}`;
+      const url = `https://wa.me/${WHATSAPP_PHONE}?text=${text}`;
+      
+      setTimeout(() => {
+        window.open(url, "_blank", "noopener");
+        form.reset();
+        setSubmitStatus("idle");
+        setIsSubmitting(false);
+      }, 500);
+    } catch (error) {
+      setSubmitStatus("error");
+      setStatusMessage("Could not save details, but opening WhatsApp...");
+      
+      const text = `Hi Mr. MSR Home Cleaning,%0AService: ${service}%0AName: ${name}%0APhone: ${phone}%0AMessage: ${message}`;
+      const url = `https://wa.me/${WHATSAPP_PHONE}?text=${text}`;
+      
+      setTimeout(() => {
+        window.open(url, "_blank", "noopener");
+        setIsSubmitting(false);
+      }, 500);
+    }
   };
   return (
     <>
@@ -116,6 +161,20 @@ function ContactPage() {
           <div className="bg-navy p-8 text-white md:p-10">
             <h3 className="font-display text-2xl text-white md:text-3xl">Book Your Cleaning</h3>
             <p className="mt-2 text-sm font-light text-white/70">Fill in your details — we will call you back shortly.</p>
+            
+            {submitStatus === "success" && (
+              <div className="mt-4 flex items-center gap-2 rounded-md bg-green-500/20 px-4 py-3 text-sm text-green-200">
+                <CheckCircle className="h-4 w-4 shrink-0" />
+                <span>{statusMessage}</span>
+              </div>
+            )}
+            {submitStatus === "error" && (
+              <div className="mt-4 flex items-center gap-2 rounded-md bg-orange-500/20 px-4 py-3 text-sm text-orange-200">
+                <AlertCircle className="h-4 w-4 shrink-0" />
+                <span>{statusMessage}</span>
+              </div>
+            )}
+            
             <div className="mt-6">
               <form onSubmit={handleSubmit} className="space-y-3">
                 <input
@@ -155,8 +214,8 @@ function ContactPage() {
                   <option>Water Tank Cleaning</option>
                 </select>
                 <textarea name="message" placeholder="Optional message" className="w-full rounded-md border border-input bg-white px-4 py-3 text-sm text-foreground" rows={3} />
-                <button type="submit" disabled={isSubmitting} className="flex w-full items-center justify-center gap-2 rounded-full bg-gold px-7 py-4 text-sm font-normal text-navy">
-                  {isSubmitting ? "Opening WhatsApp..." : "Send via WhatsApp"} <ArrowRight className="h-4 w-4" />
+                <button type="submit" disabled={isSubmitting} className="flex w-full items-center justify-center gap-2 rounded-full bg-gold px-7 py-4 text-sm font-normal text-navy disabled:opacity-60">
+                  {isSubmitting ? "Saving & Opening WhatsApp..." : "Send via WhatsApp"} <ArrowRight className="h-4 w-4" />
                 </button>
               </form>
               <p className="mt-4 text-center text-xs font-light text-white/60">Or call <a href={`tel:${PHONE}`} className="text-gold">{PHONE_DISPLAY}</a></p>
@@ -168,7 +227,7 @@ function ContactPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
         "@context": "https://schema.org",
         "@type": "LocalBusiness",
-        name: "MSR Home Cleaning",
+        name: "Mr. MSR Home Cleaning",
         telephone: PHONE,
         address: {
           "@type": "PostalAddress",

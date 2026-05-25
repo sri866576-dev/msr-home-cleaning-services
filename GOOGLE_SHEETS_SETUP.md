@@ -11,6 +11,13 @@ The website side is ready. You only need to connect a Google Sheet to it.
 - `google-apps-script/Code.gs`
 - `.env.example`
 
+The Apps Script in this repo now:
+
+- saves every booking row to Google Sheets
+- sends a notification email to:
+  - `sumithnalla24@ifheindia.org`
+  - `sri866576@gmail.com`
+
 ## What to do in VS Code
 
 1. Open `google-apps-script/Code.gs`
@@ -39,6 +46,9 @@ VITE_GOOGLE_SHEETS_WEBHOOK_URL=
 3. Delete the default code
 4. Copy-paste everything from `google-apps-script/Code.gs`
 5. Save it
+6. Run `testEmail` once inside Apps Script and approve permissions for:
+   - Google Sheets
+   - Gmail
 
 ### 3. Deploy it as a webhook
 
@@ -50,6 +60,14 @@ VITE_GOOGLE_SHEETS_WEBHOOK_URL=
    - `Who has access`: `Anyone`
 5. Click `Deploy`
 6. Copy the `Web app URL`
+
+If you already deployed it before:
+
+1. Click `Deploy`
+2. Click `Manage deployments`
+3. Edit your existing web app deployment
+4. Select the new version
+5. Deploy again
 
 ### 4. Paste the URL back into VS Code
 
@@ -81,6 +99,7 @@ Every booking will be added as a new row in your Google Sheet with these columns
 3. Submit a test entry
 4. Open your Google Sheet
 5. Confirm a new row was added
+6. Confirm both email inboxes received the `New Booking Added` message
 
 ## If it does not save
 
@@ -91,3 +110,6 @@ Check these things:
 - The Apps Script was deployed as a `Web app`
 - Access is set to `Anyone`
 - You restarted the dev server after editing `.env`
+- You pasted the latest `google-apps-script/Code.gs` into Apps Script
+- You re-deployed the Apps Script after updating the code
+- Gmail permissions were approved by running `testEmail` or `doPost`

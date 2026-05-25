@@ -23,7 +23,7 @@ export default function Nav({ onBook }: { onBook?: () => void }) {
         <a href="#home" className="flex min-w-0 flex-1 items-center pr-2">
           <div className="min-w-0 leading-tight">
             <div className="truncate font-sans text-[0.72rem] font-light uppercase tracking-[0.14em] text-white sm:text-[0.95rem] sm:tracking-[0.2em] md:text-[1.08rem] md:tracking-[0.24em]">
-              <span className="text-white">MSR Home Services</span>
+              <span className="text-white">Mr. MSR Home Cleaning</span>
             </div>
             <div className="truncate text-[8px] uppercase tracking-[0.16em] text-white/70 sm:text-[10px] sm:tracking-[0.22em] md:text-xs">
               Hyderabad

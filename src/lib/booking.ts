@@ -94,14 +94,11 @@ export async function saveBookingLeadToSheet(lead: BookingLead) {
     return false;
   }
 
-  const response = await fetch(SHEETS_WEBHOOK_URL, {
+  await fetch(SHEETS_WEBHOOK_URL, {
     method: "POST",
+    mode: "no-cors",
     body: JSON.stringify(lead),
   });
-
-  if (!response.ok) {
-    throw new Error(`Google Sheets webhook failed with status ${response.status}`);
-  }
 
   return true;
 }

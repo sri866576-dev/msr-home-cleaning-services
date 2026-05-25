@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import heroVideoFile from "../../6195521-uhd_2160_3840_25fps.mp4";
 import logoImage from "../../Blue Cleaning Services Logo_dark-blue.png";
 import {
@@ -60,8 +60,9 @@ const FOOTER_ADDRESS = "House no 3-159, Kamla Nagar, Jillelaguda, Hyderabad 5000
 const MAP_QUERY = encodeURIComponent(ADDRESS);
 const MAP_EMBED_URL = `https://www.google.com/maps?q=${MAP_QUERY}&z=17&output=embed`;
 const MAP_LINK = `https://www.google.com/maps/search/?api=1&query=${MAP_QUERY}`;
+const GOOGLE_REVIEW_LINK = "https://maps.app.goo.gl/sG2MLVT2Y9tyPUmA9";
 const WA_LINK = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(
-  "Hi MSR Home Cleaning, I'd like to book a service.",
+  "Hi Mr. MSR Home Cleaning, I'd like to book a service.",
 )}`;
 
 const IMG = {
@@ -71,6 +72,41 @@ const IMG = {
   about:
     "https://images.pexels.com/photos/4239091/pexels-photo-4239091.jpeg?auto=compress&cs=tinysrgb&w=1400",
 };
+
+const heroPromos = [
+  {
+    title: "Deep cleaning built for busy homes",
+    detail:
+      "Explore room-by-room cleaning support for kitchens, bathrooms, floors, and the spaces that need the most attention.",
+    ctaLabel: "View Services",
+    href: "/services",
+    type: "route",
+  },
+  {
+    title: "Honest pricing before the team arrives",
+    detail:
+      "Clear quotes, practical recommendations, and a simple booking flow that stays easy to use on mobile and desktop.",
+    ctaLabel: "Contact Us",
+    href: "/contact",
+    type: "route",
+  },
+  {
+    title: "See what customers say before you book",
+    detail:
+      "Read reviews from Hyderabad homes and workplaces that booked us for deep cleaning, recurring care, and specialist support.",
+    ctaLabel: "Read Reviews",
+    href: "/#reviews",
+    type: "anchor",
+  },
+  {
+    title: "Learn how Mr. MSR works and what we cover",
+    detail:
+      "Get a quick look at our process, coverage, and service approach behind home cleaning, pest control, painting, and more.",
+    ctaLabel: "About MSR",
+    href: "/about",
+    type: "route",
+  },
+] as const;
 
 const services = [
   {
@@ -112,55 +148,55 @@ const services = [
 
 const features = [
   {
-    title: "Eco-Friendly Products",
-    desc: "Plant-based, family safe cleaning agents.",
+    title: "Deep Cleaning",
+    desc: "Room-by-room intensive cleaning for kitchens, bathrooms, floors, fixtures, and hard-to-reach areas.",
     image:
-      "https://images.pexels.com/photos/10573235/pexels-photo-10573235.jpeg?auto=compress&cs=tinysrgb&w=900",
-    imageAlt: "A countertop arrangement of eco-friendly kitchen cleaning products.",
+      "https://images.pexels.com/photos/4239031/pexels-photo-4239031.jpeg?auto=compress&cs=tinysrgb&w=900",
+    imageAlt: "A cleaner wiping down a glass surface during a detailed home cleaning service.",
     imageClassName: "object-cover object-center",
     details: [
-      "We use cleaning solutions that are tough on grease, dust, and stains while still being considerate of homes with children, pets, and everyday family life.",
-      "Our team chooses products carefully for different rooms, so kitchens, living spaces, and high-touch areas get the right level of cleaning without leaving behind harsh smells or residue.",
-      "That means your space feels fresh, hygienic, and comfortable after every service, not just visually clean for a few minutes.",
+      "Our deep cleaning service is built for spaces that need more than a quick surface reset. We work through high-touch areas, neglected corners, bathroom fittings, kitchen buildup, and floor edges with a more thorough process.",
+      "It is a strong fit before events, after busy weeks, during move-ins, or anytime a home needs a clear reset that feels visible in every room.",
+      "You get a fresher, more comfortable space with the kind of detail that helps the whole home feel properly finished instead of just tidied.",
     ],
   },
   {
-    title: "Trained Professionals",
-    desc: "Background-checked, uniformed experts.",
+    title: "Pest Control Solutions",
+    desc: "Targeted treatment plans for common household and commercial pests with safer, practical prevention steps.",
     image:
-      "https://images.pexels.com/photos/9462188/pexels-photo-9462188.jpeg?auto=compress&cs=tinysrgb&w=900",
-    imageAlt: "Professional cleaners in uniform preparing a tidy living space.",
-    imageClassName: "object-cover object-[center_30%] sm:object-center",
+      "https://images.pexels.com/photos/6197120/pexels-photo-6197120.jpeg?auto=compress&cs=tinysrgb&w=900",
+    imageAlt: "A professional home-service team working inside a modern interior.",
+    imageClassName: "object-cover object-center",
     details: [
-      "Every member of our cleaning team is trained in proper room-by-room cleaning methods, safe product use, and respectful service inside occupied homes and offices.",
-      "We focus on consistency as much as speed, which means surfaces, corners, fixtures, and frequently missed spots are cleaned with a clear process instead of guesswork.",
-      "You get a professional crew that arrives prepared, works carefully, and treats your property with the same attention they give to the visible finish.",
+      "We help address common pest issues with practical treatment plans based on the kind of space, the severity of the problem, and the areas most affected.",
+      "The approach is designed to be effective without turning the process into guesswork, and we also share sensible prevention guidance to help reduce repeat issues.",
+      "That gives you a clearer path from problem to follow-up, whether you need support for a home, apartment, office, or another regularly used space.",
     ],
   },
   {
-    title: "Satisfaction Guarantee",
-    desc: "Not happy? We re-clean for free.",
+    title: "Solar Panel Cleaning & Maintenance",
+    desc: "Careful panel surface cleaning and routine upkeep support to help preserve performance and output.",
     image:
-      "https://images.pexels.com/photos/10450050/pexels-photo-10450050.jpeg?auto=compress&cs=tinysrgb&w=900",
-    imageAlt: "Bright and tidy modern home interior with a clean finished look.",
+      "https://images.pexels.com/photos/9875441/pexels-photo-9875441.jpeg?auto=compress&cs=tinysrgb&w=900",
+    imageAlt: "A technician carrying a solar panel as part of maintenance work.",
     imageClassName: "object-cover object-center",
     details: [
-      "Our job is not done when the team leaves. It is done when you feel the result matches the promise.",
-      "If something important was missed or a space does not meet expectations, we take that seriously and work quickly to make it right.",
-      "This gives you confidence to book without worrying that you will be left managing follow-up issues on your own.",
+      "Dust, residue, and outdoor buildup can affect how cleanly your solar panels operate over time, especially in exposed rooftop conditions.",
+      "We handle careful cleaning with methods suited to panel surfaces so the work stays practical, safe, and focused on protecting long-term performance.",
+      "Routine attention helps support better output, cleaner presentation, and fewer avoidable issues caused by neglected surface buildup.",
     ],
   },
   {
-    title: "Tailored Plans",
-    desc: "Customised to your home and schedule.",
+    title: "Home Painting Services",
+    desc: "Interior and exterior painting support for refresh projects, touch-ups, and full home repainting work.",
     image:
-      "https://images.pexels.com/photos/33266834/pexels-photo-33266834.jpeg?auto=compress&cs=tinysrgb&w=900",
-    imageAlt: "A tablet checklist being filled out for a customized service plan.",
+      "https://images.pexels.com/photos/6474475/pexels-photo-6474475.jpeg?auto=compress&cs=tinysrgb&w=900",
+    imageAlt: "A paint roller resting in a tray during a home painting project.",
     imageClassName: "object-cover object-center",
     details: [
-      "Not every property needs the same checklist, so we shape the cleaning plan around your space, your priorities, and the condition of each area.",
-      "You can book for a full home, selected rooms, a one-time deep clean, or recurring service depending on what makes sense for your routine.",
-      "This flexible approach helps you get better value, clearer expectations, and a service that fits your timing instead of forcing a one-size-fits-all package.",
+      "We support repainting and refresh work for interior rooms and exterior surfaces, whether you need a small touch-up or a broader home update.",
+      "The service is planned around the scale of the job, the condition of the walls or surfaces, and the finish you want at the end.",
+      "That helps you move forward with a painting plan that feels organised, practical, and suited to everyday homes rather than a one-size-fits-all package.",
     ],
   },
 ];
@@ -195,7 +231,7 @@ const reviews = [
   },
 ];
 
-const OVERALL_RATING = 4.7;
+const OVERALL_RATING = 4.9;
 
 const whyPoints = [
   { title: "Experience", text: "A dependable, knowledgeable cleaning crew assigned just for you." },
@@ -262,8 +298,8 @@ const heroStatements = [
   "Fresh, hygienic spaces that feel brand new",
 ];
 
-const HERO_TAGLINE = "MSR HOME SERVICES";
-const HERO_STATEMENT_STEP_SECONDS = 3.4;
+const HERO_TAGLINE = "MR.MSR HOME SERVICES";
+const HERO_STATEMENT_STEP_SECONDS = 2.2;
 
 // Nav component moved to src/components/Nav.tsx
 
@@ -347,7 +383,7 @@ function BookingForm({
         <input
           id="service"
           name="service"
-          value={service ?? "General Cleaning"}
+          value={typeof service === "string" ? service : "General Cleaning"}
           readOnly
           className="w-full rounded-md border border-gold/40 bg-secondary px-4 py-3 text-sm font-normal text-foreground outline-none"
         />
@@ -399,11 +435,23 @@ function BookingForm({
   );
 }
 
-function Hero({ onBook }: { onBook: () => void }) {
+function Hero({ onBook }: { onBook: (service?: string) => void }) {
+  const [activePromo, setActivePromo] = useState(0);
+
+  useEffect(() => {
+    const intervalId = window.setInterval(() => {
+      setActivePromo((current) => (current + 1) % heroPromos.length);
+    }, 6000);
+
+    return () => window.clearInterval(intervalId);
+  }, []);
+
+  const promo = heroPromos[activePromo];
+
   return (
     <section
       id="home"
-      className="relative min-h-[100svh] overflow-hidden bg-[#dff4ff] pt-[5.5rem] sm:pt-24 lg:pt-16 text-navy"
+      className="relative min-h-[100svh] overflow-hidden bg-[#dff4ff] pt-[5.5rem] pb-10 sm:pt-24 sm:pb-14 lg:pt-16 text-navy"
     >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.65),transparent_34%),linear-gradient(180deg,rgba(223,244,255,0.98)_0%,rgba(203,233,255,0.96)_55%,rgba(191,226,252,0.98)_100%)]">
         <div className="absolute left-1/2 top-[16%] h-40 w-40 -translate-x-1/2 rounded-full bg-gold/15 blur-3xl sm:h-56 sm:w-56" />
@@ -430,39 +478,60 @@ function Hero({ onBook }: { onBook: () => void }) {
                 <span className="hero-brand-tagline">
                   <span className="hero-brand-topline">
                     <img src={logoImage} alt="" aria-hidden="true" className="hero-brand-logo" />
-                    <span className="hero-brand-tagline-msr">MSR</span>
+                    <span className="hero-brand-tagline-msr">MR.MSR</span>
                   </span>
                   <span className="hero-brand-tagline-service">Home Services</span>
                 </span>
               </h1>
               <div className="hero-copy-stack">
-                <p
-                  className="word-in mx-auto mt-4 max-w-[34rem] text-sm font-light leading-relaxed text-navy/80 sm:text-base md:text-lg lg:max-w-[31rem]"
-                  style={{ animationDelay: "0.9s" }}
-                >
-                  A trained Hyderabad team delivering hotel-grade home and office cleaning since
-                  2009. Over 9,500 households served — with eco-friendly products, transparent
-                  pricing, and a satisfaction guarantee on every visit.
-                </p>
+                <div className="word-in mt-5 w-full" style={{ animationDelay: "0.9s" }}>
+                  <div className="scrolling-promo-track mx-auto max-w-[34rem] text-center text-black/70 font-light lg:max-w-[31rem]">
+                    <div className="scrolling-promo-inner" key={promo.title}>
+                      <div className="hero-service-promo">
+                        <p className="service-detail mx-auto max-w-[27rem] text-[14px] leading-7 font-light text-foreground sm:text-[14px] md:text-[14px]">
+                          {promo.detail}
+                        </p>
+                        <div className="mt-4">
+                          {promo.type === "route" ? (
+                            <Link
+                              to={promo.href}
+                              className="inline-flex min-h-9 items-center justify-center rounded-full border border-sky-300 bg-white/80 px-3.5 py-1.5 text-[10px] font-light uppercase tracking-[0.18em] text-black transition hover:bg-white sm:min-h-10 sm:px-4 sm:text-[10px] md:min-h-10 md:px-4.5 md:text-[11px]"
+                            >
+                              {promo.ctaLabel}
+                            </Link>
+                          ) : (
+                            <a
+                              href={promo.href}
+                              className="inline-flex min-h-9 items-center justify-center rounded-full border border-sky-300 bg-white/80 px-3.5 py-1.5 text-[10px] font-light uppercase tracking-[0.18em] text-black transition hover:bg-white sm:min-h-10 sm:px-4 sm:text-[10px] md:min-h-10 md:px-4.5 md:text-[11px]"
+                            >
+                              {promo.ctaLabel}
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
                 <div
-                  className="word-in mt-5 w-full max-w-[30rem]"
+                  className="word-in mt-3 w-full max-w-[32rem] lg:-mt-1"
                   style={{ animationDelay: "1.1s" }}
                 >
                   <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                     <button
-                      onClick={onBook}
-                      className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-gold px-5 py-3 text-sm font-normal text-navy hover:bg-white"
+                      type="button"
+                      onClick={() => onBook("General Cleaning")}
+                      className="inline-flex min-h-9 w-full items-center justify-center gap-2 rounded-full bg-gold px-3 py-2 text-[14px] font-normal text-navy transition hover:bg-white sm:px-6 sm:py-3.5 lg:min-h-[3.2rem] lg:px-6 lg:py-3.5"
                     >
                       Book Now <ArrowRight className="h-4 w-4" />
                     </button>
 
                     <a
                       href={`tel:${PHONE}`}
-                      className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full border border-sky-300 bg-white/75 px-5 py-3 text-sm font-normal text-navy hover:bg-navy hover:text-white"
+                      className="inline-flex min-h-9 w-full items-center justify-center gap-2 rounded-full border border-sky-300 bg-white/75 px-3 py-2 text-[14px] font-normal text-navy hover:bg-navy hover:text-white sm:px-6 sm:py-3.5 lg:min-h-[3.2rem] lg:px-6 lg:py-3.5"
                     >
-                      <Phone className="h-4 w-4" fill="currentColor" strokeWidth={0} />
                       {PHONE_DISPLAY}
+                      <Phone className="h-4 w-4" fill="currentColor" strokeWidth={0} />
                     </a>
                   </div>
                 </div>
@@ -549,13 +618,17 @@ function Features() {
   return (
     <section className="bg-background py-20 md:py-28">
       <div className="mx-auto max-w-7xl px-4 md:px-8">
-        <div className="mx-auto max-w-2xl text-center">
+        <div className="mx-auto max-w-4xl text-center">
           <p className="text-[11px] font-normal uppercase tracking-[0.3em] text-gold">
-            What sets us apart
+            Featured Services
           </p>
-          <h2 className="mt-4 font-display text-3xl text-foreground md:text-5xl">
-            Crafted care, finished to perfection
+          <h2 className="mt-4 font-display text-4xl text-foreground md:text-6xl">
+            Specialist care for the jobs that matter most
           </h2>
+          <p className="mt-6 text-lg font-light leading-relaxed text-muted-foreground md:text-xl">
+            Explore four of our most-requested services, each delivered with practical care, clear
+            process, and results designed for real homes and busy spaces.
+          </p>
         </div>
         <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {features.map((f) => (
@@ -571,21 +644,23 @@ function Features() {
                   src={f.image}
                   alt={f.imageAlt}
                   loading="lazy"
-                  className={`h-40 w-full transition-transform duration-700 group-hover:scale-105 sm:h-40 lg:h-44 ${f.imageClassName}`}
+                  className={`h-52 w-full transition-transform duration-700 group-hover:scale-105 sm:h-48 lg:h-56 ${f.imageClassName}`}
                 />
               </div>
-              <div className="p-5 sm:p-6">
+              <div className="p-6 sm:p-7">
                 <div className="flex items-start justify-between gap-4">
-                  <h3 className="font-display text-lg text-foreground">{f.title}</h3>
+                  <h3 className="font-display text-[1.05rem] text-foreground md:text-[1.15rem]">
+                    {f.title}
+                  </h3>
                   <ChevronDown
                     className={`mt-1 h-5 w-5 shrink-0 text-gold transition-transform duration-300 ${openFeature === f.title ? "rotate-180" : ""}`}
                     strokeWidth={1.8}
                   />
                 </div>
-                <p className="mt-3 text-sm font-light leading-relaxed text-muted-foreground">
+                <p className="mt-8 min-h-[6.75rem] text-sm font-light leading-8 text-muted-foreground">
                   {f.desc}
                 </p>
-                <p className="mt-4 text-[11px] font-normal uppercase tracking-[0.24em] text-gold/80">
+                <p className="mt-7 text-[11px] font-normal uppercase tracking-[0.24em] text-gold/80">
                   {openFeature === f.title ? "Tap to hide details" : "Tap to read details"}
                 </p>
                 {openFeature === f.title ? (
@@ -634,8 +709,8 @@ function Services({ onBook }: { onBook: (service?: string) => void }) {
               onClick={() => onBook(s.title)}
               className="group flex flex-col items-start border border-border bg-card p-7 text-left transition-all hover:-translate-y-1 hover:border-gold"
             >
-              <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-md bg-navy text-gold transition-transform group-hover:scale-110">
-                <s.icon className="h-7 w-7" strokeWidth={1.4} />
+              <div className="mb-5 flex h-10 w-10 sm:h-14 sm:w-14 items-center justify-center rounded-md bg-navy text-gold transition-transform group-hover:scale-110">
+                <s.icon className="h-5 w-5 sm:h-7 sm:w-7" strokeWidth={1.4} />
               </div>
               <h3 className="font-display text-base text-foreground">{s.title}</h3>
               <p className="mt-2 text-xs font-light leading-relaxed text-muted-foreground">
@@ -719,7 +794,7 @@ function WhyChoose() {
         </div>
       </div>
       <div className="mt-14">
-        <Marquee speed="slow">
+        <Marquee manual className="md:px-0">
           {whyPoints.map((p) => (
             <article
               key={p.title}
@@ -777,10 +852,20 @@ function Reviews() {
             <span className="text-sm font-normal text-foreground">{OVERALL_RATING.toFixed(1)}</span>
             <span className="text-sm font-light text-muted-foreground">on Google</span>
           </div>
+          <div className="mt-5">
+            <a
+              href={GOOGLE_REVIEW_LINK}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center rounded-full bg-black px-5 py-3 text-sm font-medium text-white transition hover:bg-black/85"
+            >
+              Give Review
+            </a>
+          </div>
         </div>
       </div>
       <div className="mt-14">
-        <Marquee>
+        <Marquee manual className="md:px-0">
           {reviews.map((r, i) => (
             <article
               key={i}
@@ -860,7 +945,9 @@ function Contact({ onBook }: { onBook: () => void }) {
               className="flex items-start gap-4 border border-border bg-card p-4 hover:border-gold"
             >
               <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-whatsapp text-white">
-                <MessageCircle className="h-5 w-5" fill="currentColor" strokeWidth={0} />
+                <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.67-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.076 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421-7.403h-.004c-1.562 0-3.051.611-4.164 1.717-1.113 1.106-1.728 2.589-1.728 4.15 0 3.217 2.619 5.835 5.835 5.835 1.562 0 3.051-.611 4.164-1.717 1.113-1.107 1.728-2.59 1.728-4.151 0-3.217-2.619-5.835-5.835-5.835m10.033-7.48A11.953 11.953 0 0 0 12.05 0C5.495 0 .16 5.335.16 11.899c0 2.176.564 4.298 1.628 6.187L.228 23.64l6.895-1.812c1.784.953 3.771 1.459 5.927 1.459 6.554 0 11.89-5.335 11.89-11.889 0-3.176-1.237-6.164-3.49-8.413Z"/>
+                </svg>
               </div>
               <div>
                 <div className="text-[11px] font-normal uppercase tracking-wider text-muted-foreground">
@@ -903,8 +990,9 @@ function Contact({ onBook }: { onBook: () => void }) {
           </p>
           <div className="mt-6">
             <button
-              onClick={onBook}
-              className="flex w-full items-center justify-center gap-2 rounded-full bg-gold px-7 py-4 text-sm font-normal text-navy hover:bg-white"
+              type="button"
+              onClick={() => onBook("General Cleaning")}
+              className="flex w-full items-center justify-center gap-2 rounded-full bg-gold px-5 py-3 text-sm font-normal text-navy hover:bg-white"
             >
               Open Booking Form <ArrowRight className="h-4 w-4" />
             </button>
@@ -982,7 +1070,7 @@ function Footer() {
               />
               <div className="leading-tight">
                 <div className="font-display text-lg">
-                  <span className="text-gold">MSR</span> Home Cleaning
+                  <span className="text-gold">Mr. MSR</span> Home Cleaning
                 </div>
                 <div className="text-[10px] uppercase tracking-[0.25em] text-white/60">
                   Hyderabad
@@ -1139,20 +1227,14 @@ function Index() {
               MSR Home Cleaning is a trusted local team delivering hotel-grade home and office
               cleaning since 2009.
             </p>
-            <div className="mt-6 flex w-full flex-col items-center justify-center gap-3 sm:flex-row">
-              <Link
-                to="/about"
-                className="inline-flex w-full items-center justify-center rounded-full bg-gold px-6 py-3 text-sm font-normal text-navy sm:min-w-[12rem] sm:w-auto"
-              >
-                Learn more
-              </Link>
-              <Link
-                to="/contact"
-                className="inline-flex w-full items-center justify-center rounded-full bg-navy px-6 py-3 text-sm font-normal text-white hover:bg-gold hover:text-navy sm:min-w-[12rem] sm:w-auto"
-              >
-                Get in touch
-              </Link>
-            </div>
+          <div className="mt-6 flex w-full flex-col items-center justify-center gap-3 sm:flex-row">
+            <Link
+              to="/about"
+              className="inline-flex w-full items-center justify-center rounded-full bg-gold px-6 py-3 text-sm font-normal text-navy sm:min-w-[12rem] sm:w-auto"
+            >
+              Learn more
+            </Link>
+          </div>
           </div>
         </section>
 
@@ -1164,11 +1246,16 @@ function Index() {
             <p className="text-[11px] font-normal uppercase tracking-[0.3em] text-gold">Contact</p>
             <h2 className="mt-4 font-display text-3xl text-foreground md:text-5xl">Get in touch</h2>
             <p className="mt-4 font-light text-muted-foreground">
-              Quick replies, same-day slots in many areas.{" "}
-              <Link to="/contact" className="text-gold">
+              Quick replies, same-day slots in many areas.
+            </p>
+            <div className="mt-6">
+              <Link
+                to="/contact"
+                className="inline-flex items-center justify-center rounded-full bg-navy px-6 py-3 text-sm font-normal text-white hover:bg-gold hover:text-navy"
+              >
                 Contact us
               </Link>
-            </p>
+            </div>
           </div>
         </section>
 

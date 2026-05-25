@@ -1,10 +1,16 @@
-import { MessageCircle, Phone } from "lucide-react";
+import { Phone } from "lucide-react";
 
 const PHONE = "+918919780725";
 const PHONE_DISPLAY = "8919780725";
 const WHATSAPP_PHONE = "918919780725";
-const WA_MSG = encodeURIComponent("Hi MSR Home Care, I'd like to book a cleaning service.");
+const WA_MSG = encodeURIComponent("Hi Mr. MSR Home Care, I'd like to book a cleaning service.");
 
+const WhatsAppIcon = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.966-.273-.099-.472-.149-.672.149-.198.297-.768.966-.941 1.164-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.447-.52.149-.174.198-.298.298-.497.099-.198.05-.372-.025-.52-.074-.148-.672-1.611-.921-2.207-.242-.579-.487-.5-.672-.51-.173-.009-.372-.01-.571-.01-.198 0-.52.074-.792.372-.273.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.077 4.487.711.308 1.264.492 1.695.63.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.007-1.414.248-.695.248-1.29.173-1.414-.074-.124-.272-.198-.569-.347z" />
+    <path d="M12.006 2.001c-5.523 0-10.004 4.48-10.004 10.003 0 1.761.462 3.48 1.337 4.99L2 22l4.994-1.315A9.947 9.947 0 0012.006 22c5.523 0 10.003-4.48 10.003-10.003 0-5.523-4.48-10.003-10.003-10.003zm5.799 14.569c-.273.766-1.62 1.475-2.233 1.577-.613.099-1.073.136-1.668-.021-.594-.158-1.558-.514-2.492-1.412-.93-.898-1.566-1.999-1.749-2.268-.183-.27-.021-.417.15-.566.153-.146.337-.386.506-.581.17-.197.224-.34.337-.557.112-.217.056-.398-.025-.57-.082-.171-.661-1.705-.905-2.34-.242-.608-.49-.53-.676-.535-.183-.005-.397-.005-.61-.005-.215 0-.498.074-.762.375-.263.299-1.012 1.002-1.012 2.443 0 1.441 1.06 2.298 1.21 2.456.149.148 2.53 3.729 6.132 5.222.858.371 1.53.562 2.053.631.868.119 1.67.009 2.306-.682.626-.691.907-1.637.907-2.255 0-.618-.204-.911-.45-1.038-.248-.126-.577-.176-.85-.109-.275.068-1.723.71-1.985.793z" />
+  </svg>
+);
 export function FloatingContact() {
   const waLink = `https://wa.me/${WHATSAPP_PHONE}?text=${WA_MSG}`;
 
@@ -17,7 +23,7 @@ export function FloatingContact() {
         aria-label={`WhatsApp ${PHONE_DISPLAY}`}
         className="floating-contact-btn floating-contact-whatsapp"
       >
-        <MessageCircle className="h-6 w-6" />
+        <WhatsAppIcon className="h-4 w-4 sm:h-6 sm:w-6" />
       </a>
 
       <a
@@ -25,7 +31,7 @@ export function FloatingContact() {
         aria-label={`Call ${PHONE_DISPLAY}`}
         className="floating-contact-btn floating-contact-phone"
       >
-        <Phone className="h-6 w-6" />
+        <Phone className="h-4 w-4 sm:h-6 sm:w-6" />
       </a>
     </div>
   );
