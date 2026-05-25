@@ -16,6 +16,37 @@
   --lp-container: 1180px;
 }
 
+/* Mobile touch optimizations */
+*,
+*::before,
+*::after {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+
+html, body {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.lp-body button, .lp-body a, .lp-body input, .lp-body textarea, .lp-body select {
+  -webkit-user-select: text;
+  user-select: text;
+  touch-action: manipulation;
+}
+
+@media (max-width: 640px) {
+  .lp-body button, .lp-body a {
+    min-height: 48px;
+    min-width: 48px;
+  }
+  
+  .lp-body input, .lp-body textarea, .lp-body select {
+    min-height: 44px;
+    font-size: 16px;
+  }
+}
+
 *,
 *::before,
 *::after {
@@ -59,9 +90,18 @@ body.lp-body {
   position: sticky;
   top: 0;
   z-index: 40;
-  background: rgba(8, 19, 31, 0.96);
+  background: rgba(0, 0, 0, 0.97);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(10px);
+}
+
+.lp-site-header-edge .lp-container {
+  width: 100%;
+  max-width: none;
+}
+
+.lp-site-header-edge .lp-header-row {
+  padding-inline: clamp(1rem, 2.4vw, 2.4rem);
 }
 
 .lp-header-row {
@@ -77,6 +117,10 @@ body.lp-body {
   align-items: center;
   gap: 0.9rem;
   min-width: 0;
+}
+
+.lp-brand-text {
+  flex: 1;
 }
 
 .lp-brand-logo,
@@ -97,16 +141,17 @@ body.lp-body {
 
 .lp-brand-title {
   color: var(--lp-white);
-  font-size: 0.96rem;
-  font-weight: 700;
-  letter-spacing: 0.01em;
+  font-size: 0.78rem;
+  font-weight: 300;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
 }
 
 .lp-brand-subtitle {
   color: rgba(255, 255, 255, 0.68);
-  font-size: 0.74rem;
+  font-size: 0.58rem;
   text-transform: uppercase;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.18em;
 }
 
 .lp-header-call {
@@ -135,6 +180,18 @@ body.lp-body {
   gap: 1.5rem;
 }
 
+@media (max-width: 768px) {
+  .lp-hero-grid {
+    gap: 1.2rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .lp-hero-grid {
+    gap: 1rem;
+  }
+}
+
 .lp-hero-copy,
 .lp-form-card,
 .lp-service-card,
@@ -147,17 +204,16 @@ body.lp-body {
 .lp-hero-copy {
   background: var(--lp-white);
   border: 1px solid var(--lp-border);
-  /* Increased padding to avoid text touching card edges on small screens */
-  padding: 1.6rem;
+  padding: 1.4rem;
   box-shadow: var(--lp-shadow);
 }
 
 .lp-eyebrow,
 .lp-form-eyebrow {
   margin: 0 0 0.65rem;
-  color: var(--lp-brand);
+  color: #000000;
   font-size: 0.74rem;
-  font-weight: 700;
+  font-weight: 400;
   letter-spacing: 0.16em;
   text-transform: uppercase;
 }
@@ -208,6 +264,15 @@ body.lp-body {
   font-size: 0.98rem;
   font-weight: 600;
   text-align: center;
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+
+@media (max-width: 640px) {
+  .lp-btn {
+    min-height: 48px;
+    font-size: 0.96rem;
+  }
 }
 
 .lp-btn-primary {
@@ -267,6 +332,12 @@ body.lp-body {
   box-shadow: var(--lp-shadow);
 }
 
+@media (max-width: 640px) {
+  .lp-form-card {
+    padding: 1.2rem;
+  }
+}
+
 .lp-form-text,
 .lp-form-note {
   color: rgba(255, 255, 255, 0.76);
@@ -282,6 +353,19 @@ body.lp-body {
   color: var(--lp-white);
 }
 
+.lp-select {
+  appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--lp-brand) 50%),
+    linear-gradient(135deg, var(--lp-brand) 50%, transparent 50%);
+  background-position:
+    calc(100% - 20px) calc(50% - 3px),
+    calc(100% - 14px) calc(50% - 3px);
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+  padding-right: 2.8rem;
+}
+
 .lp-form {
   margin-top: 1.2rem;
 }
@@ -292,6 +376,12 @@ body.lp-body {
 
 .lp-field + .lp-field {
   margin-top: 0.9rem;
+}
+
+@media (max-width: 640px) {
+  .lp-field + .lp-field {
+    margin-top: 0.8rem;
+  }
 }
 
 .lp-field-label {
@@ -310,6 +400,13 @@ body.lp-body {
   padding: 0.95rem 1rem;
   background: var(--lp-white);
   color: var(--lp-text);
+}
+
+@media (max-width: 640px) {
+  .lp-input {
+    min-height: 48px;
+    font-size: 16px;
+  }
 }
 
 .lp-input:focus {
@@ -348,13 +445,43 @@ body.lp-body {
   margin-top: 1.5rem;
 }
 
+.lp-service-grid {
+  grid-auto-rows: 1fr;
+}
+
 .lp-service-card,
 .lp-review-card {
   background: var(--lp-white);
   border: 1px solid var(--lp-border);
-  /* Slightly larger padding so card text doesn't touch the borders */
-  padding: 1.5rem;
+  padding: 1.25rem;
   box-shadow: 0 10px 24px rgba(8, 19, 31, 0.06);
+}
+
+.lp-service-card {
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  min-height: 100%;
+  padding: 0;
+  overflow: hidden;
+  cursor: pointer;
+  transition:
+    transform 220ms ease,
+    box-shadow 220ms ease,
+    border-color 220ms ease;
+}
+
+.lp-service-card:hover,
+.lp-service-card:focus-visible {
+  transform: translateY(-4px);
+  border-color: rgba(46, 94, 166, 0.45);
+  box-shadow: 0 18px 38px rgba(8, 19, 31, 0.12);
+}
+
+.lp-service-image {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  background: var(--lp-brand-soft);
 }
 
 .lp-service-icon {
@@ -380,6 +507,20 @@ body.lp-body {
   font-size: 1.15rem;
 }
 
+.lp-service-card h3,
+.lp-service-card p,
+.lp-service-card .lp-card-link {
+  margin-left: 1.25rem;
+  margin-right: 1.25rem;
+}
+
+.lp-service-card h3 {
+  margin-top: 1.2rem;
+  min-height: 2.8rem;
+  font-size: 1.12rem;
+  line-height: 1.28;
+}
+
 .lp-service-card p,
 .lp-review-card p,
 .lp-footer-text,
@@ -389,8 +530,16 @@ body.lp-body {
   font-size: 0.94rem;
 }
 
+.lp-service-card p {
+  min-height: auto;
+  line-height: 1.7;
+  text-align: left;
+  padding-left: 1.25rem;
+}
+
 .lp-card-link {
   margin-top: 1rem;
+  margin-bottom: 1.3rem;
   padding: 0;
   border: 0;
   background: none;
@@ -438,8 +587,13 @@ body.lp-body {
 }
 
 .lp-site-footer {
-  background: var(--lp-navy);
+  background: #000;
   color: var(--lp-white);
+}
+
+.lp-footer-logo-white {
+  filter: brightness(0) invert(1);
+  background: transparent;
 }
 
 .lp-footer-grid {
@@ -598,6 +752,7 @@ body.lp-body {
 
   .lp-service-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
   }
 
   .lp-review-grid {
@@ -618,6 +773,14 @@ body.lp-body {
     min-height: 76px;
   }
 
+  .lp-brand-title {
+    font-size: 0.96rem;
+  }
+
+  .lp-brand-subtitle {
+    font-size: 0.68rem;
+  }
+
   .lp-hero-copy,
   .lp-form-card {
     padding: 2rem;
@@ -629,6 +792,7 @@ body.lp-body {
 
   .lp-service-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.4rem;
   }
 
   .lp-mobile-bar {
@@ -638,4 +802,8 @@ body.lp-body {
   .lp-footer-bottom {
     padding-bottom: 1rem;
   }
+}
+
+.lp-thank-you-card h1 {
+  font-size: clamp(2.8rem, 7vw, 5rem);
 }

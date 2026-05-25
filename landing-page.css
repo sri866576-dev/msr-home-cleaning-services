@@ -370,18 +370,18 @@ body.lp-body {
   margin-top: 1.2rem;
 }
 
-.
-
-@media (max-width: 640px) {
-  .lp-field + .lp-field {
-    margin-top: 0.8rem;
-  }
-}lp-field {
+.lp-field {
   display: block;
 }
 
 .lp-field + .lp-field {
   margin-top: 0.9rem;
+}
+
+@media (max-width: 640px) {
+  .lp-field + .lp-field {
+    margin-top: 0.8rem;
+  }
 }
 
 .lp-field-label {

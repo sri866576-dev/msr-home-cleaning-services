@@ -1,4 +1,3 @@
-// Bundled landing page script with Sheets webhook support
 (function () {
   const STORAGE_KEY = "msr-landing-lead";
   const SHEETS_WEBHOOK_URL =
@@ -32,27 +31,16 @@
 
   const saveLeadToSheet = async (lead) => {
     if (!SHEETS_WEBHOOK_URL) {
-      console.warn("No SHEETS_WEBHOOK_URL configured");
       return false;
     }
 
-    try {
-      const response = await fetch(SHEETS_WEBHOOK_URL, {
-        method: "POST",
-        mode: "no-cors",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(lead),
-      });
+    await fetch(SHEETS_WEBHOOK_URL, {
+      method: "POST",
+      mode: "no-cors",
+      body: JSON.stringify(lead),
+    });
 
-      // With no-cors, response.ok is always false - but fetch itself succeeds
-      console.log("Form submitted to Google Sheets");
-      return true;
-    } catch (error) {
-      console.error("Error submitting to Google Sheets:", error);
-      throw error;
-    }
+    return true;
   };
 
   const updateSelectedService = (serviceName) => {
