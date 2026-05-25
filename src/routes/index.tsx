@@ -93,7 +93,7 @@ const heroPromos = [
   {
     title: "See what customers say before you book",
     detail:
-      "Read reviews from Hyderabad homes and workplaces that booked us for deep cleaning, recurring care, and specialist support.",
+      "Read reviews from Hyderabad homes and workplaces that booked us for deep cleaning and specialist support.",
     ctaLabel: "Read Reviews",
     href: "/#reviews",
     type: "anchor",
