@@ -795,12 +795,8 @@ body.lp-body {
     gap: 1.4rem;
   }
 
-  .lp-mobile-bar {
-    display: none;
-  }
-
   .lp-footer-bottom {
-    padding-bottom: 1rem;
+    padding-bottom: 5.6rem;
   }
 }
 

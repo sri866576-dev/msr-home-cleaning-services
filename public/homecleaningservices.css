@@ -795,12 +795,59 @@ body.lp-body {
     gap: 1.4rem;
   }
 
-  .lp-mobile-bar {
-    display: none;
-  }
-
   .lp-footer-bottom {
     padding-bottom: 1rem;
+  }
+
+  .lp-mobile-bar {
+    left: 1.2rem;
+    right: auto;
+    bottom: 1.5rem;
+    top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    padding: 0;
+    background: transparent;
+    border: none;
+  }
+
+  .lp-mobile-call,
+  .lp-mobile-whatsapp {
+    width: 52px;
+    height: 52px;
+    min-height: 52px;
+    border-radius: 50%;
+    font-size: 0;
+    color: transparent;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.22);
+    transition: transform 200ms ease, box-shadow 200ms ease;
+    position: relative;
+  }
+
+  .lp-mobile-call::after,
+  .lp-mobile-whatsapp::after {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.35rem;
+    color: var(--lp-white);
+    pointer-events: none;
+  }
+
+  .lp-mobile-call::after {
+    content: "📞";
+  }
+
+  .lp-mobile-whatsapp::after {
+    content: "💬";
+  }
+
+  .lp-mobile-call:hover,
+  .lp-mobile-whatsapp:hover {
+    transform: scale(1.12);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
   }
 }
 

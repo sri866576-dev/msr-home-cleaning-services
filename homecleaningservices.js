@@ -159,7 +159,7 @@
         return;
       }
 
-      window.location.href = "thank-you.html";
+      window.location.href = "thankyou.html";
     });
   }
 
