@@ -15,8 +15,7 @@ The Apps Script in this repo now:
 
 - saves every booking row to Google Sheets
 - sends a notification email to:
-  - `sumithnalla24@ifheindia.org`
-  - `sri866576@gmail.com`
+  - `msrvmcm@gmail.com`
 
 ## What to do in VS Code
 

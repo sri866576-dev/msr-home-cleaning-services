@@ -27,7 +27,7 @@ All code updates have been completed:
 ### STEP 1: Create Google Sheet
 1. Go to https://sheets.google.com
 2. Click **"+ New"** → **"Blank spreadsheet"**
-3. Name it: **"msrserv"**
+3. Name it: **"mrmsr"**
 4. This sheet will auto-create when first submission comes in
 
 ### STEP 2: Deploy Google Apps Script
@@ -75,8 +75,7 @@ All code updates have been completed:
 1. In Google Apps Script (Code.gs), verify emails are correct:
    ```javascript
    var NOTIFICATION_EMAILS = [
-     "sumithnalla24@ifheindia.org",
-     "sri866576@gmail.com",
+     "msrvmcm@gmail.com",
    ].join(",");
    ```
 2. If you need to change emails, edit this code and redeploy

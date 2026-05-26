@@ -1,10 +1,9 @@
 var NOTIFICATION_EMAILS = [
-  "sumithnalla24@ifheindia.org",
-  "sri866576@gmail.com",
+  "msrvmcm@gmail.com",
 ].join(",");
 
 var SPREADSHEET_ID = "1Hj2s6MuL4cB1mMKJzS1ler0vHsFcNThWB0w2p4JAkLE";
-var SHEET_NAME = "msrserv";
+var SHEET_NAME = "mrmsr";
 
 function doGet() {
   return ContentService

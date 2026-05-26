@@ -350,7 +350,7 @@ def build_pdf():
         Paragraph("AUTOMATION & ALERTS", style_service_tag),
         Paragraph("Instant Admin Email Notifications & Messages", style_service_title),
         Paragraph("Custom triggers instantly notifying project administrators via email matching lead entry updates in the spreadsheet database.", style_service_desc),
-        Paragraph("• Dual email broadcast rules (sumithnalla24@ifheindia.org & sri866576@gmail.com)<br/>"
+        Paragraph("• Email broadcast rules (msrvmcm@gmail.com)<br/>"
                   "• Rich-text professional HTML email alert layout with service markers<br/>"
                   "• Instant subject formatting with lead name and requested service<br/>"
                   "• Automated contact form triggers redirecting customers to direct WhatsApp chats", style_service_bullets)

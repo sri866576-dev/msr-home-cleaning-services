@@ -1,7 +1,7 @@
 (function () {
   const STORAGE_KEY = "msr-landing-lead";
   const SHEETS_WEBHOOK_URL =
-    "https://script.google.com/macros/s/AKfycbwRT5DlHoDNgy2-wFiRQKUWFeTvGxRyLOkU9LCAdRisdKhJNrGSag7l0XZw8Iw3WA6wLA/exec";
+    "https://script.google.com/macros/s/AKfycbzzeQM85cWfJUF_RowPo6gEA1Erwy98kbF03fZqwBZeJJOKi3wXu60RmgDVGVidS2wW/exec";
   const form = document.getElementById("landing-lead-form");
   const nameInput = document.getElementById("lead-name");
   const phoneInput = document.getElementById("lead-phone");
