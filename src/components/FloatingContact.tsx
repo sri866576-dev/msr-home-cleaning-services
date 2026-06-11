@@ -3,7 +3,7 @@ import { Phone } from "lucide-react";
 const PHONE = "+918919780725";
 const PHONE_DISPLAY = "8919780725";
 const WHATSAPP_PHONE = "918919780725";
-const WA_MSG = encodeURIComponent("Hi Mr. MSR Home Care, I'd like to book a cleaning service.");
+const WA_MSG = encodeURIComponent("Hi MSR Deep Cleaning, I'd like to book a cleaning service.");
 
 const WhatsAppIcon = ({ className }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">

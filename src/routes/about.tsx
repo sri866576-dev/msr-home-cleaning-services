@@ -6,13 +6,13 @@ import Nav from "@/components/Nav";
 export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
-      { title: "About — Mr. MSR Home Cleaning" },
+      { title: "About — MSR Deep Cleaning" },
       {
         name: "description",
         content:
-          "Mr. MSR Home Cleaning: trusted local cleaning experts in Hyderabad with 15+ years of experience. Background-checked teams, eco-friendly products.",
+          "MSR Deep Cleaning: trusted local cleaning experts in Hyderabad with 15+ years of experience. Background-checked teams, eco-friendly products.",
       },
-      { property: "og:title", content: "About — Mr. MSR Home Cleaning" },
+      { property: "og:title", content: "About — MSR Deep Cleaning" },
       { property: "og:description", content: "Trusted local cleaning experts in Hyderabad with 15+ years of experience." },
     ],
     links: [{ rel: "canonical", href: "/about" }],
@@ -32,7 +32,7 @@ function AboutPage() {
             <p className="text-[11px] font-normal uppercase tracking-[0.3em] text-gold">Who We Are</p>
             <h1 className="mt-4 font-display text-3xl text-foreground md:text-5xl">Honest cleaning, delivered with care</h1>
             <p className="mt-6 font-light leading-relaxed text-muted-foreground">
-              <span className="font-normal text-foreground">Mr. MSR Home Cleaning</span> is one of the most reputable cleaning services in Hyderabad. From end-to-end home sweeps to specialised, area-focused jobs, our trained crew takes housekeeping to a whole new level — with hotel-grade equipment and eco-friendly products that are safe for your family.
+              <span className="font-normal text-foreground">MSR Deep Cleaning</span> is one of the most reputable cleaning services in Hyderabad. From end-to-end home sweeps to specialised, area-focused jobs, our trained crew takes housekeeping to a whole new level — with hotel-grade equipment and eco-friendly products that are safe for your family.
             </p>
             <blockquote className="mt-6 border-l-2 border-gold bg-secondary p-5 text-sm font-light italic text-foreground">
               We are market leaders with more than 15 years of experience. Our team is well-trained, reliable, trustworthy and deeply skilled.
@@ -54,7 +54,7 @@ function AboutPage() {
           <div className="order-2 relative lg:order-1">
             <img
               src="https://images.pexels.com/photos/4239091/pexels-photo-4239091.jpeg?auto=compress&cs=tinysrgb&w=1400"
-              alt="Mr. MSR cleaning professionals at work"
+              alt="MSR Deep Cleaning professionals at work"
               loading="lazy"
               className="aspect-[4/5] w-full object-cover"
             />
@@ -115,7 +115,7 @@ function AboutPage() {
           <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Organization",
-            name: "Mr. MSR Home Cleaning",
+            name: "MSR Deep Cleaning",
             telephone: "+918919780725",
             address: {
               "@type": "PostalAddress",

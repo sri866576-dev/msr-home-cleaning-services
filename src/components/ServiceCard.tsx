@@ -55,7 +55,7 @@ export default function ServiceCard({ s }: { s: Service }) {
     const formUrl = buildGoogleFormPrefillUrl(lead);
 
     const WHATSAPP_PHONE = "918919780725";
-    const message = `Hi Mr. MSR Home Cleaning,\nService: ${s.title}\nName: ${lead.name}\nPhone: ${lead.phone}`;
+    const message = `Hi MSR Deep Cleaning,\nService: ${s.title}\nName: ${lead.name}\nPhone: ${lead.phone}`;
     const whatsappUrl = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(message)}`;
 
     setSavedToSheet(sheetSaved);

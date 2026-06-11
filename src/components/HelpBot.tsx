@@ -106,7 +106,7 @@ export function HelpBot({
       label: "Emergency cleaning",
       icon: MessageCircle,
       action: () =>
-        openWhatsApp("Hi Mr. MSR Home Cleaning, I need emergency cleaning service today."),
+        openWhatsApp("Hi MSR Deep Cleaning, I need emergency cleaning service today."),
     },
   ];
 
@@ -159,7 +159,7 @@ export function HelpBot({
               type="button"
               onClick={() =>
                 openWhatsApp(
-                  "Hi Mr. MSR Home Cleaning, I need a service that is not listed in the quick options.",
+                  "Hi MSR Deep Cleaning, I need a service that is not listed in the quick options.",
                 )
               }
               className="flex items-center justify-between rounded-2xl border border-white/10 bg-whatsapp/85 px-4 py-3 text-left text-sm font-normal text-white transition-colors hover:bg-whatsapp"
@@ -193,7 +193,7 @@ export function HelpBot({
             <button
               type="button"
               onClick={() =>
-                openWhatsApp("Hi Mr. MSR Home Cleaning, I need a custom quote for a service.")
+                openWhatsApp("Hi MSR Deep Cleaning, I need a custom quote for a service.")
               }
               className="flex items-center justify-between rounded-2xl border border-white/10 bg-whatsapp/85 px-4 py-3 text-left text-sm font-normal text-white transition-colors hover:bg-whatsapp"
             >
@@ -218,7 +218,7 @@ export function HelpBot({
                 type="button"
                 onClick={() =>
                   openWhatsApp(
-                    `Hi Mr. MSR Home Cleaning, do you serve ${area}? I am interested in booking a service.`,
+                    `Hi MSR Deep Cleaning, do you serve ${area}? I am interested in booking a service.`,
                   )
                 }
                 className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/6 px-4 py-3 text-left text-sm font-light text-white transition-colors hover:border-gold/60 hover:bg-white/10"
@@ -243,7 +243,7 @@ export function HelpBot({
             <button
               type="button"
               onClick={() =>
-                openWhatsApp("Hi Mr. MSR Home Cleaning, can you confirm whether you serve my area?")
+                openWhatsApp("Hi MSR Deep Cleaning, can you confirm whether you serve my area?")
               }
               className="flex items-center justify-between rounded-2xl border border-white/10 bg-whatsapp/85 px-4 py-3 text-left text-sm font-normal text-white transition-colors hover:bg-whatsapp"
             >

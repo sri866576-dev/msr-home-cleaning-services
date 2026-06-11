@@ -1,5 +1,5 @@
 var NOTIFICATION_EMAILS = [
-  "msrvmcm@gmail.com",
+  "msrdeepcleaningservices@gmail.com",
 ].join(",");
 
 var SPREADSHEET_ID = "1Hj2s6MuL4cB1mMKJzS1ler0vHsFcNThWB0w2p4JAkLE";
@@ -29,7 +29,7 @@ function getSpreadsheet_() {
 }
 
 function testEmail() {
-  var subject = "MSR Home Cleaning Test";
+  var subject = "MSR Deep Cleaning Test";
   var htmlBody =
     "<div style='font-family:Arial,sans-serif;max-width:560px;color:#0f172a;'>" +
     "<h2 style='color:#0284c7;margin-bottom:16px;'>Test Email</h2>" +
@@ -162,7 +162,7 @@ function sendBookingNotification_(data, timestamp) {
     "</div>" +
     "<div style='padding:20px;background:#f8fafc;border:1px solid #e2e8f0;border-top:none;border-radius:0 0 8px 8px;'>" +
     "<p style='margin:0;color:#64748b;font-size:12px;'>📋 Check your Google Sheet for all submissions.</p>" +
-    "<p style='margin:8px 0 0 0;color:#64748b;font-size:12px;'>This is an automated notification from MSR Home Cleaning.</p>" +
+    "<p style='margin:8px 0 0 0;color:#64748b;font-size:12px;'>This is an automated notification from MSR Deep Cleaning.</p>" +
     "</div>" +
     "</div>";
 

@@ -8,7 +8,7 @@ import { isValidName, isValidPhoneNumber, normalizeName, normalizePhoneNumber } 
 const PHONE = "+918919780725";
 const PHONE_DISPLAY = "8919780725";
 const WHATSAPP_PHONE = "918919780725";
-const WA_LINK = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent("Hi Mr. MSR Home Cleaning, I'd like to get a quote.")}`;
+const WA_LINK = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent("Hi MSR Deep Cleaning, I'd like to get a quote.")}`;
 const ADDRESS = "House no 3-159, Government School Kamla Nagar Colony, Jillelaguda, Hyderabad, 500097";
 const MAP_LINK = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(ADDRESS)}`;
 const SHEETS_WEBHOOK_URL = import.meta.env.VITE_GOOGLE_SHEETS_WEBHOOK_URL || "";
@@ -16,10 +16,10 @@ const SHEETS_WEBHOOK_URL = import.meta.env.VITE_GOOGLE_SHEETS_WEBHOOK_URL || "";
 export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
-      { title: "Contact — Mr. MSR Home Cleaning" },
-      { name: "description", content: "Contact Mr. MSR Home Cleaning — call, WhatsApp, or visit our location in Hyderabad." },
-      { property: "og:title", content: "Contact — Mr. MSR Home Cleaning" },
-      { property: "og:description", content: "Get in touch with Mr. MSR Home Cleaning for bookings and enquiries." },
+      { title: "Contact — MSR Deep Cleaning" },
+      { name: "description", content: "Contact MSR Deep Cleaning — call, WhatsApp, or visit our location in Hyderabad." },
+      { property: "og:title", content: "Contact — MSR Deep Cleaning" },
+      { property: "og:description", content: "Get in touch with MSR Deep Cleaning for bookings and enquiries." },
     ],
     links: [{ rel: "canonical", href: "/contact" }],
   }),
@@ -85,7 +85,7 @@ function ContactPage() {
       setSubmitStatus("success");
       setStatusMessage("Details saved! Opening WhatsApp...");
       
-      const text = `Hi Mr. MSR Home Cleaning,%0AService: ${service}%0AName: ${name}%0APhone: ${phone}%0AMessage: ${message}`;
+      const text = `Hi MSR Deep Cleaning,%0AService: ${service}%0AName: ${name}%0APhone: ${phone}%0AMessage: ${message}`;
       const url = `https://wa.me/${WHATSAPP_PHONE}?text=${text}`;
       
       setTimeout(() => {
@@ -98,7 +98,7 @@ function ContactPage() {
       setSubmitStatus("error");
       setStatusMessage("Could not save details, but opening WhatsApp...");
       
-      const text = `Hi Mr. MSR Home Cleaning,%0AService: ${service}%0AName: ${name}%0APhone: ${phone}%0AMessage: ${message}`;
+      const text = `Hi MSR Deep Cleaning,%0AService: ${service}%0AName: ${name}%0APhone: ${phone}%0AMessage: ${message}`;
       const url = `https://wa.me/${WHATSAPP_PHONE}?text=${text}`;
       
       setTimeout(() => {
@@ -227,7 +227,7 @@ function ContactPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
         "@context": "https://schema.org",
         "@type": "LocalBusiness",
-        name: "Mr. MSR Home Cleaning",
+        name: "MSR Deep Cleaning",
         telephone: PHONE,
         address: {
           "@type": "PostalAddress",

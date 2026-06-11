@@ -7,7 +7,6 @@ import {
   Bug,
   Building2,
   Droplets,
-  Bath,
   UtensilsCrossed,
   Sofa,
   Wind,
@@ -35,24 +34,24 @@ const services = [
   { icon: PaintbrushVertical, title: "Professional Painting Services", desc: "High-quality interior and exterior painting for a fresh look." },
   { icon: Bug, title: "Pest Control Services", desc: "Effective solutions to keep your premises free from pests." },
   { icon: Building2, title: "Office Cleaning", desc: "Spotless workspaces that boost productivity." },
-  { icon: Droplets, title: "Water Tank Cleaning", desc: "Safe, hygienic tank sanitisation." },
-  { icon: Bath, title: "Washroom Cleaning", desc: "Deep sanitisation for sparkling bathrooms." },
   { icon: UtensilsCrossed, title: "Kitchen Deep Cleaning", desc: "Degrease, disinfect, and restore shine." },
   { icon: Sofa, title: "Sofa & Carpet Care", desc: "Stain removal and fabric care." },
   { icon: Wind, title: "Mattress Cleaning", desc: "Dust mite & allergen removal." },
   { icon: BedDouble, title: "Book by Room", desc: "Pick the rooms — we handle the rest." },
+  { icon: Droplets, title: "Water Tank Cleaning", desc: "Safe, hygienic tank sanitisation." },
+  { icon: Droplets, title: "Tank Cleaning", desc: "Thorough tank cleaning for safe and hygienic water storage." },
 ];
 
 export const Route = createFileRoute("/services")({
   head: () => ({
     meta: [
-      { title: "Services — MSR Home Cleaning" },
+      { title: "Services — MSR Deep Cleaning" },
       {
         name: "description",
         content:
           "Professional, eco-friendly cleaning services in Hyderabad: home, office, tank cleaning, sofa & carpet care and more.",
       },
-      { property: "og:title", content: "Services — MSR Home Cleaning" },
+      { property: "og:title", content: "Services — MSR Deep Cleaning" },
       { property: "og:description", content: "Professional, eco-friendly cleaning services across Hyderabad." },
       { property: "og:type", content: "website" },
     ],
@@ -67,7 +66,7 @@ function ServicesPage() {
   const ld = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
-    name: "MSR Home Cleaning",
+    name: "MSR Deep Cleaning",
     telephone: "+918919780725",
     address: {
       "@type": "PostalAddress",

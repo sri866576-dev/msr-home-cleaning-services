@@ -229,7 +229,7 @@ def build_pdf():
     # ----------------------------------------------------
     # HEADER SECTION
     # ----------------------------------------------------
-    logo_path = "Blue Cleaning Services Logo_dark-blue.png"
+    logo_path = "logoofmsr.png"
     logo_w = 40
     logo_h = 40
     
@@ -239,8 +239,8 @@ def build_pdf():
         logo_img.hAlign = 'LEFT'
         
         # Table of Logo and Title side by side
-        title_p1 = Paragraph("Mr. MSR", style_brand_title)
-        title_p2 = Paragraph("Home Cleaning Services", style_brand_subtitle)
+        title_p1 = Paragraph("MSR", style_brand_title)
+        title_p2 = Paragraph("Deep Cleaning Services", style_brand_subtitle)
         brand_cell = Table([[logo_img, [title_p1, title_p2]]], colWidths=[45, 200])
         brand_cell.setStyle(TableStyle([
             ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
@@ -251,8 +251,8 @@ def build_pdf():
         ]))
     else:
         # Fallback text logo
-        title_p1 = Paragraph("Mr. MSR", style_brand_title)
-        title_p2 = Paragraph("Home Cleaning Services", style_brand_subtitle)
+        title_p1 = Paragraph("MSR", style_brand_title)
+        title_p2 = Paragraph("Deep Cleaning Services", style_brand_subtitle)
         brand_cell = [title_p1, title_p2]
 
     # Prepare Right Cell: Meta Title & Info
@@ -283,7 +283,7 @@ def build_pdf():
     # ----------------------------------------------------
     client_info = [
         Paragraph("CLIENT INFORMATION", style_card_title),
-        Paragraph("<b>MSR Home Cleaning Services</b>", style_bold),
+        Paragraph("<b>MSR Deep Cleaning Services</b>", style_bold),
         Paragraph("Contact: Service Provider Owner", style_card_content),
         Paragraph("Location: Jillelaguda, Hyderabad, TS, 500097", style_card_content),
         Paragraph("Service Areas: Jubilee Hills, Gachibowli, Madhapur, etc.", style_card_content)
@@ -292,7 +292,7 @@ def build_pdf():
     prepared_by = [
         Paragraph("PREPARED BY", style_card_title),
         Paragraph("<b>Web Development & Automation Team</b>", style_bold),
-        Paragraph("Email: sri866576@gmail.com", style_card_content),
+        Paragraph("Email: msrdeepcleaningservices@gmail.com", style_card_content),
         Paragraph("Format: Fully Automated Web App", style_card_content),
         Paragraph("Tech Stack: HTML, CSS, JS, Apps Script, Sheets API", style_card_content)
     ]
@@ -350,7 +350,7 @@ def build_pdf():
         Paragraph("AUTOMATION & ALERTS", style_service_tag),
         Paragraph("Instant Admin Email Notifications & Messages", style_service_title),
         Paragraph("Custom triggers instantly notifying project administrators via email matching lead entry updates in the spreadsheet database.", style_service_desc),
-        Paragraph("• Email broadcast rules (msrvmcm@gmail.com)<br/>"
+        Paragraph("• Email broadcast rules (msrdeepcleaningservices@gmail.com)<br/>"
                   "• Rich-text professional HTML email alert layout with service markers<br/>"
                   "• Instant subject formatting with lead name and requested service<br/>"
                   "• Automated contact form triggers redirecting customers to direct WhatsApp chats", style_service_bullets)
@@ -428,8 +428,8 @@ def build_pdf():
         Spacer(1, 25),
         HRFlowable(width="90%", thickness=1, color=color_muted, hAlign='CENTER'),
         Spacer(1, 4),
-        Paragraph("<b>Mr. MSR / Client Owner</b>", style_bold),
-        Paragraph("MSR Home Cleaning Services", style_muted)
+        Paragraph("<b>MSR / Client Owner</b>", style_bold),
+        Paragraph("MSR Deep Cleaning Services", style_muted)
     ]
     sig_client[3].alignment = 1
     sig_client[4].alignment = 1
