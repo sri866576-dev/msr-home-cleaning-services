@@ -31,6 +31,7 @@ export default function Nav({ onBook }: { onBook?: () => void }) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
 
   const links = [
     { label: "Home", to: "/" },
@@ -41,16 +42,53 @@ export default function Nav({ onBook }: { onBook?: () => void }) {
     { label: "Contact", to: "/contact" },
   ];
 
-  const handleAppClick = (e: React.MouseEvent) => {
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (e: Event) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
+    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+    return () => {
+      window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+    };
+  }, []);
+
+  const handleAppClick = async (e: React.MouseEvent) => {
     e.preventDefault();
-    const confirmed = window.confirm("Download app?");
-    if (confirmed) {
-      const link = document.createElement("a");
-      link.href = "/msr-home-cleaning.apk";
-      link.setAttribute("download", "msr-home-cleaning.apk");
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches 
+      || (window.navigator as any).standalone;
+
+    if (isStandalone) {
+      alert("MSR Deep Cleaning App is already installed and running!");
+      return;
+    }
+
+    if (deferredPrompt) {
+      const confirmed = window.confirm("Install MSR Deep Cleaning App?");
+      if (confirmed) {
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === "accepted") {
+          setDeferredPrompt(null);
+        }
+      }
+    } else {
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
+      if (isIOS) {
+        alert(
+          "To install the App on iOS (iPhone/iPad):\n\n" +
+          "1. Tap the Share button at the bottom of Safari (square with an up arrow).\n" +
+          "2. Scroll down and tap 'Add to Home Screen'.\n" +
+          "3. Tap 'Add' in the top-right corner."
+        );
+      } else {
+        alert(
+          "To install the App:\n\n" +
+          "1. Tap your browser's menu button (three dots in the top-right).\n" +
+          "2. Select 'Install app' or 'Add to Home Screen'."
+        );
+      }
     }
   };
 
