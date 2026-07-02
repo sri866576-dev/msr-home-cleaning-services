@@ -1,186 +1,303 @@
-var NOTIFICATION_EMAILS = [
-  "msrdeepcleaningservices@gmail.com",
-].join(",");
+var NOTIFICATION_EMAIL = "spacialisthomecleaning@gmail.com";
+var SPREADSHEET_ID = "1RjwCN7h-1B0Zjm3XfzPjCRzHWt5PWZchRejjhkygDFU";
+var SHEET_NAME = "servicemsr";
 
-var SPREADSHEET_ID = "1Hj2s6MuL4cB1mMKJzS1ler0vHsFcNThWB0w2p4JAkLE";
-var SHEET_NAME = "mrmsr";
+var HEADERS = [
+  "Submitted At",
+  "Service",
+  "Name",
+  "Phone",
+  "Address / Locality",
+  "Message",
+  "Source",
+  "Page URL",
+  "User Agent",
+];
 
 function doGet() {
-  return ContentService
-    .createTextOutput(JSON.stringify({ok: true, message: "Google Apps Script is working"}))
-    .setMimeType(ContentService.MimeType.JSON);
-}
-
-function getSpreadsheet_() {
-  if (SPREADSHEET_ID && SPREADSHEET_ID.trim() !== "") {
-    try {
-      return SpreadsheetApp.openById(SPREADSHEET_ID);
-    } catch (e) {
-      throw new Error("Invalid SPREADSHEET_ID: " + e.message);
-    }
-  }
-
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
-  if (!ss) {
-    throw new Error("No active spreadsheet. Open this script from a Google Sheet and redeploy.");
-  }
-
-  return ss;
-}
-
-function testEmail() {
-  var subject = "MSR Deep Cleaning Test";
-  var htmlBody =
-    "<div style='font-family:Arial,sans-serif;max-width:560px;color:#0f172a;'>" +
-    "<h2 style='color:#0284c7;margin-bottom:16px;'>Test Email</h2>" +
-    "<p>This is a test email from Apps Script.</p>" +
-    "<p>If you received this message, Gmail sending is working correctly.</p>" +
-    "</div>";
-
-  GmailApp.sendEmail(NOTIFICATION_EMAILS, subject, "This is a test email from Apps Script.", {
-    htmlBody: htmlBody,
+  return jsonResponse_({
+    ok: true,
+    message: "MSR Deep Cleaning lead webhook is working.",
   });
-
-  Logger.log("Test email sent to: " + NOTIFICATION_EMAILS);
 }
 
 function doPost(e) {
+  var lock = LockService.getScriptLock();
+
   try {
-    var ss = getSpreadsheet_();
-    var sheet = ss.getSheetByName(SHEET_NAME);
+    lock.waitLock(10000);
 
-    if (!sheet) {
-      sheet = ss.insertSheet(SHEET_NAME);
-    }
+    var data = parseRequest_(e);
+    var lead = normalizeLead_(data);
+    var sheet = getLeadSheet_();
 
-    var data = JSON.parse(e.postData.contents || "{}");
-
-    if (sheet.getLastRow() === 0) {
-      sheet.appendRow([
-        "Submitted At",
-        "Service",
-        "Name",
-        "Phone",
-        "Address",
-        "Message",
-        "Source",
-      ]);
-      sheet.getRange(1, 1, 1, 7).setFontWeight("bold");
-      sheet.getRange(1, 1, 1, 7).setBackground("#0284c7");
-      sheet.getRange(1, 1, 1, 7).setFontColor("#ffffff");
-      sheet.setFrozenRows(1);
-      
-      sheet.setColumnWidth(1, 180);
-      sheet.setColumnWidth(2, 150);
-      sheet.setColumnWidth(3, 120);
-      sheet.setColumnWidth(4, 120);
-      sheet.setColumnWidth(5, 200);
-      sheet.setColumnWidth(6, 200);
-      sheet.setColumnWidth(7, 100);
-    }
-
-    var timestamp = new Date().toISOString();
-    
+    ensureHeader_(sheet);
     sheet.appendRow([
-      data.submittedAt || timestamp,
-      data.service || "Not specified",
-      data.name || "",
-      data.phone || "",
-      data.address || "",
-      data.message || "",
-      data.source || "website",
+      lead.submittedAt,
+      lead.service,
+      lead.name,
+      lead.phone,
+      lead.address,
+      lead.message,
+      lead.source,
+      lead.pageUrl,
+      lead.userAgent,
     ]);
 
-    sendBookingNotification_(data, timestamp);
+    sendLeadEmail_(lead);
 
-    return ContentService
-      .createTextOutput(
-        JSON.stringify({
-          ok: true,
-          message: "Data saved successfully and notification sent",
-        }),
-      )
-      .setMimeType(ContentService.MimeType.JSON);
+    return jsonResponse_({
+      ok: true,
+      message: "Lead saved and email sent.",
+    });
   } catch (error) {
-    Logger.log("Error in doPost: " + error);
-    return ContentService
-      .createTextOutput(
-        JSON.stringify({
-          ok: false,
-          error: String(error),
-        }),
-      )
-      .setMimeType(ContentService.MimeType.JSON);
+    console.error(error);
+    return jsonResponse_({
+      ok: false,
+      error: String(error && error.message ? error.message : error),
+    });
+  } finally {
+    try {
+      lock.releaseLock();
+    } catch (releaseError) {
+      console.error(releaseError);
+    }
   }
 }
 
-function sendBookingNotification_(data, timestamp) {
-  if (!NOTIFICATION_EMAILS || NOTIFICATION_EMAILS.trim() === "") {
-    Logger.log("No notification emails configured");
-    return;
+function parseRequest_(e) {
+  if (!e) {
+    return {};
   }
 
-  var submittedAt = data.submittedAt || timestamp || new Date().toISOString();
-  var service = data.service || "General Cleaning";
-  var name = data.name || "Unknown";
-  var phone = data.phone || "Not provided";
-  var address = data.address || "Not provided";
-  var message = data.message || "No message";
-  var source = data.source || "website";
+  if (e.postData && e.postData.contents) {
+    var body = e.postData.contents;
+    var contentType = String(e.postData.type || "").toLowerCase();
 
-  var subject = "🔔 New Service Request - " + escapeHtml_(name) + " - " + escapeHtml_(service);
-
-  var htmlBody =
-    "<div style='font-family:Arial,sans-serif;max-width:600px;color:#0f172a;background:#ffffff;'>" +
-    "<div style='background:#0284c7;color:#ffffff;padding:20px;border-radius:8px 8px 0 0;'>" +
-    "<h2 style='margin:0;font-size:20px;'>🎉 New Service Request Received</h2>" +
-    "</div>" +
-    "<div style='padding:20px;background:#ffffff;border:1px solid #e2e8f0;border-top:none;'>" +
-    "<table style='width:100%;border-collapse:collapse;'>" +
-    "<tr><td style='padding:12px;background:#f8fafc;font-weight:bold;border-bottom:1px solid #e2e8f0;'>Service</td>" +
-    "<td style='padding:12px;border-bottom:1px solid #e2e8f0;'>" + escapeHtml_(service) + "</td></tr>" +
-    "<tr><td style='padding:12px;background:#f8fafc;font-weight:bold;border-bottom:1px solid #e2e8f0;'>Name</td>" +
-    "<td style='padding:12px;border-bottom:1px solid #e2e8f0;'>" + escapeHtml_(name) + "</td></tr>" +
-    "<tr><td style='padding:12px;background:#f8fafc;font-weight:bold;border-bottom:1px solid #e2e8f0;'>Phone</td>" +
-    "<td style='padding:12px;border-bottom:1px solid #e2e8f0;'><a href='tel:" + escapeHtml_(phone) + "' style='color:#0284c7;text-decoration:none;'>" + escapeHtml_(phone) + "</a></td></tr>";
-  
-  if (address && address.trim() !== "") {
-    htmlBody += "<tr><td style='padding:12px;background:#f8fafc;font-weight:bold;border-bottom:1px solid #e2e8f0;'>Address</td>" +
-    "<td style='padding:12px;border-bottom:1px solid #e2e8f0;'>" + escapeHtml_(address) + "</td></tr>";
+    if (contentType.indexOf("application/json") !== -1 || looksLikeJson_(body)) {
+      try {
+        return JSON.parse(body);
+      } catch (jsonError) {
+        throw new Error("Invalid JSON payload: " + jsonError.message);
+      }
+    }
   }
 
-  if (message && message.trim() !== "") {
-    htmlBody += "<tr><td style='padding:12px;background:#f8fafc;font-weight:bold;border-bottom:1px solid #e2e8f0;'>Message</td>" +
-    "<td style='padding:12px;border-bottom:1px solid #e2e8f0;'>" + escapeHtml_(message) + "</td></tr>";
+  return e.parameter || {};
+}
+
+function looksLikeJson_(body) {
+  var trimmed = String(body || "").trim();
+  return trimmed.charAt(0) === "{" || trimmed.charAt(0) === "[";
+}
+
+function normalizeLead_(data) {
+  data = data || {};
+
+  var submittedAt = cleanText_(data.submittedAt) || new Date().toISOString();
+  var service = cleanText_(data.service) || "General Enquiry";
+  var name = cleanText_(data.name) || "Not provided";
+  var phone = cleanPhone_(data.phone);
+  var address = cleanText_(data.address || data.locality);
+  var message = cleanText_(data.message);
+  var source = cleanText_(data.source) || "website";
+  var pageUrl = cleanText_(data.pageUrl || data.url);
+  var userAgent = cleanText_(data.userAgent);
+
+  return {
+    submittedAt: submittedAt,
+    service: service,
+    name: name,
+    phone: phone || "Not provided",
+    address: address,
+    message: message,
+    source: source,
+    pageUrl: pageUrl,
+    userAgent: userAgent,
+  };
+}
+
+function cleanText_(value) {
+  if (value === null || value === undefined) {
+    return "";
   }
 
-  htmlBody += "<tr><td style='padding:12px;background:#f8fafc;font-weight:bold;border-bottom:1px solid #e2e8f0;'>Source</td>" +
-    "<td style='padding:12px;border-bottom:1px solid #e2e8f0;'>" + escapeHtml_(source) + "</td></tr>" +
-    "<tr><td style='padding:12px;background:#f8fafc;font-weight:bold;'>Submitted</td>" +
-    "<td style='padding:12px;'>" + escapeHtml_(submittedAt) + "</td></tr>" +
-    "</table>" +
-    "</div>" +
-    "<div style='padding:20px;background:#f8fafc;border:1px solid #e2e8f0;border-top:none;border-radius:0 0 8px 8px;'>" +
-    "<p style='margin:0;color:#64748b;font-size:12px;'>📋 Check your Google Sheet for all submissions.</p>" +
-    "<p style='margin:8px 0 0 0;color:#64748b;font-size:12px;'>This is an automated notification from MSR Deep Cleaning.</p>" +
-    "</div>" +
-    "</div>";
+  return String(value)
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 1000);
+}
 
-  try {
-    GmailApp.sendEmail(NOTIFICATION_EMAILS, subject, "A new service request has been added.", {
-      htmlBody: htmlBody,
-      noReply: false,
-    });
-    Logger.log("Email notification sent to: " + NOTIFICATION_EMAILS);
-  } catch (error) {
-    Logger.log("Error sending email: " + error);
+function cleanPhone_(value) {
+  if (value === null || value === undefined) {
+    return "";
   }
+
+  var digits = String(value).replace(/\D/g, "");
+  if (digits.length > 10 && digits.indexOf("91") === 0) {
+    digits = digits.slice(2);
+  }
+
+  return digits.slice(-10);
+}
+
+function getLeadSheet_() {
+  var spreadsheet;
+
+  if (SPREADSHEET_ID && SPREADSHEET_ID.trim()) {
+    spreadsheet = SpreadsheetApp.openById(SPREADSHEET_ID);
+  } else {
+    spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  }
+
+  if (!spreadsheet) {
+    throw new Error("Spreadsheet not found. Set SPREADSHEET_ID or bind this script to a Sheet.");
+  }
+
+  var sheet = spreadsheet.getSheetByName(SHEET_NAME);
+  if (!sheet) {
+    sheet = spreadsheet.insertSheet(SHEET_NAME);
+  }
+
+  return sheet;
+}
+
+function ensureHeader_(sheet) {
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(HEADERS);
+  } else {
+    var currentHeaders = sheet.getRange(1, 1, 1, HEADERS.length).getValues()[0];
+    var needsHeaderFix = false;
+
+    for (var i = 0; i < HEADERS.length; i += 1) {
+      if (currentHeaders[i] !== HEADERS[i]) {
+        needsHeaderFix = true;
+        break;
+      }
+    }
+
+    if (needsHeaderFix) {
+      sheet.getRange(1, 1, 1, HEADERS.length).setValues([HEADERS]);
+    }
+  }
+
+  var headerRange = sheet.getRange(1, 1, 1, HEADERS.length);
+  headerRange.setFontWeight("bold");
+  headerRange.setBackground("#008A90");
+  headerRange.setFontColor("#ffffff");
+  sheet.setFrozenRows(1);
+  sheet.autoResizeColumns(1, HEADERS.length);
+}
+
+function sendLeadEmail_(lead) {
+  var subject = "New MSR Cleaning Lead - " + lead.name + " - " + lead.service;
+  var plainBody =
+    "New service request received\n\n" +
+    "Service: " + lead.service + "\n" +
+    "Name: " + lead.name + "\n" +
+    "Phone: " + lead.phone + "\n" +
+    "Address / Locality: " + (lead.address || "Not provided") + "\n" +
+    "Message: " + (lead.message || "Not provided") + "\n" +
+    "Source: " + lead.source + "\n" +
+    "Submitted At: " + lead.submittedAt + "\n";
+
+  var emails = NOTIFICATION_EMAIL.split(",");
+  for (var i = 0; i < emails.length; i += 1) {
+    var email = emails[i].trim();
+    if (!email) continue;
+
+    var htmlBody =
+      "<div style='font-family:Arial,sans-serif;max-width:640px;color:#0D2A3A;background:#ffffff;'>" +
+      "<div style='background:#008A90;color:#ffffff;padding:18px 20px;border-radius:12px 12px 0 0;'>" +
+      "<h2 style='margin:0;font-size:20px;'>New MSR Cleaning Lead</h2>" +
+      "<p style='margin:6px 0 0;font-size:13px;'>A customer submitted a request from the website.</p>" +
+      "</div>" +
+      "<table style='width:100%;border-collapse:collapse;border:1px solid #d7eeee;border-top:none;'>" +
+      emailRow_("Service", lead.service) +
+      emailRow_("Name", lead.name) +
+      emailRow_("Phone", lead.phone) +
+      emailRow_("Address / Locality", lead.address || "Not provided") +
+      emailRow_("Message", lead.message || "Not provided") +
+      emailRow_("Source", lead.source) +
+      emailRow_("Submitted At", lead.submittedAt) +
+      emailRow_("Page URL", lead.pageUrl || "Not captured") +
+      "</table>" +
+      "<div style='padding:14px 20px;background:#F4F7F6;border:1px solid #d7eeee;border-top:none;border-radius:0 0 12px 12px;'>" +
+      "<p style='margin:0;font-size:12px;color:#5A707A;'>This email was sent to " +
+      escapeHtml_(email) +
+      ".</p>" +
+      "</div>" +
+      "</div>";
+
+    try {
+      MailApp.sendEmail(email, subject, plainBody, {
+        htmlBody: htmlBody,
+      });
+      console.log("Email successfully sent to " + email);
+    } catch (emailError) {
+      console.error("Failed to send email to " + email + ": " + String(emailError && emailError.message ? emailError.message : emailError));
+    }
+  }
+}
+
+function emailRow_(label, value) {
+  return (
+    "<tr>" +
+    "<td style='width:180px;padding:12px 14px;background:#F4F7F6;border-bottom:1px solid #d7eeee;font-weight:bold;'>" +
+    escapeHtml_(label) +
+    "</td>" +
+    "<td style='padding:12px 14px;border-bottom:1px solid #d7eeee;'>" +
+    escapeHtml_(value || "") +
+    "</td>" +
+    "</tr>"
+  );
 }
 
 function escapeHtml_(value) {
-  return String(value)
+  return String(value || "")
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function jsonResponse_(payload) {
+  return ContentService
+    .createTextOutput(JSON.stringify(payload))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+function testLeadEmail() {
+  sendLeadEmail_({
+    submittedAt: new Date().toISOString(),
+    service: "Test Cleaning Service",
+    name: "Test Customer",
+    phone: "9876543210",
+    address: "Hyderabad",
+    message: "This is a test lead email.",
+    source: "apps-script-test",
+    pageUrl: "",
+    userAgent: "",
+  });
+}
+
+function testDoPost() {
+  var dummyEvent = {
+    postData: {
+      contents: JSON.stringify({
+        submittedAt: new Date().toISOString(),
+        service: "Deep Home Cleaning",
+        name: "Diagnostic Test",
+        phone: "9999999999",
+        address: "Test Location",
+        message: "Testing doPost execution",
+        source: "diagnostic-test"
+      }),
+      type: "application/json"
+    }
+  };
+  
+  var result = doPost(dummyEvent);
+  Logger.log(result.getContentText());
 }

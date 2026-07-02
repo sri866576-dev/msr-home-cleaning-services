@@ -1,0 +1,18 @@
+{
+  "name": "MSR Deep Cleaning Services",
+  "short_name": "MSR Cleaning",
+  "description": "Premium home, office & deep cleaning services in Hyderabad",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F4F7F6",
+  "theme_color": "#008A90",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/logoofmsr.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

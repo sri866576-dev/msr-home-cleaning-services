@@ -14,8 +14,7 @@ The website side is ready. You only need to connect a Google Sheet to it.
 The Apps Script in this repo now:
 
 - saves every booking row to Google Sheets
-- sends a notification email to:
-  - `msrvmcm@gmail.com`
+- sends notification emails to the configured notification emails.
 
 ## What to do in VS Code
 

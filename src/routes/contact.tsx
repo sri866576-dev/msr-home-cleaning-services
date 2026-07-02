@@ -1,8 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
-import { Phone, MessageCircle, MapPin, Clock, ArrowRight, CheckCircle, AlertCircle } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Phone, MessageCircle, MapPin, Clock, ArrowRight, CheckCircle, AlertCircle, Loader2, Mail } from "lucide-react";
 import BackButton from "@/components/BackButton";
 import Nav from "@/components/Nav";
+import { Footer } from "./index";
 import { isValidName, isValidPhoneNumber, normalizeName, normalizePhoneNumber } from "@/lib/booking";
 
 const PHONE = "+918919780725";
@@ -31,10 +32,27 @@ function ContactPage() {
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
   const [statusMessage, setStatusMessage] = useState("");
 
+  useEffect(() => {
+    const revealElements = document.querySelectorAll(".reveal-on-scroll, .reveal-left, .reveal-right");
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+          }
+        });
+      },
+      { threshold: 0.15 },
+    );
+
+    revealElements.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (isSubmitting) return;
-    
+
     const form = e.currentTarget as HTMLFormElement;
     const nameInput = form.elements.namedItem("name") as HTMLInputElement;
     const phoneInput = form.elements.namedItem("phone") as HTMLInputElement;
@@ -42,7 +60,7 @@ function ContactPage() {
     const phone = normalizePhoneNumber(phoneInput?.value ?? "");
     const service = (form.elements.namedItem("service") as HTMLSelectElement)?.value ?? "General Enquiry";
     const message = (form.elements.namedItem("message") as HTMLTextAreaElement)?.value?.trim() ?? "";
-    
+
     nameInput.value = name;
     phoneInput.value = phone;
     nameInput.setCustomValidity("");
@@ -84,10 +102,10 @@ function ContactPage() {
 
       setSubmitStatus("success");
       setStatusMessage("Details saved! Opening WhatsApp...");
-      
+
       const text = `Hi MSR Deep Cleaning,%0AService: ${service}%0AName: ${name}%0APhone: ${phone}%0AMessage: ${message}`;
       const url = `https://wa.me/${WHATSAPP_PHONE}?text=${text}`;
-      
+
       setTimeout(() => {
         window.open(url, "_blank", "noopener");
         form.reset();
@@ -97,10 +115,10 @@ function ContactPage() {
     } catch (error) {
       setSubmitStatus("error");
       setStatusMessage("Could not save details, but opening WhatsApp...");
-      
+
       const text = `Hi MSR Deep Cleaning,%0AService: ${service}%0AName: ${name}%0APhone: ${phone}%0AMessage: ${message}`;
       const url = `https://wa.me/${WHATSAPP_PHONE}?text=${text}`;
-      
+
       setTimeout(() => {
         window.open(url, "_blank", "noopener");
         setIsSubmitting(false);
@@ -110,135 +128,136 @@ function ContactPage() {
   return (
     <>
       <Nav />
-      <main className="min-h-screen bg-background text-foreground pt-16">
+      <main className="min-h-screen bg-[#F4F7F6] text-[#0D2A3A] pt-24 pb-16">
         <BackButton />
-      <section className="bg-secondary py-20 md:py-28">
-        <div className="mx-auto grid max-w-7xl gap-12 px-4 md:px-8 lg:grid-cols-2 lg:items-center">
-          <div>
-            <p className="text-[11px] font-normal uppercase tracking-[0.3em] text-gold">Get in touch</p>
-            <h1 className="mt-4 font-display text-3xl text-foreground md:text-5xl">We reply within an hour</h1>
-            <p className="mt-4 font-light text-muted-foreground">Share your details and our team will craft a tailored quote for your space.</p>
-            <div className="mt-8 space-y-4">
-              <a href={`tel:${PHONE}`} className="flex items-start gap-4 border border-border bg-card p-4 hover:border-gold">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-gold text-navy">
-                  <Phone className="h-5 w-5" fill="currentColor" strokeWidth={0} />
+
+        <section className="py-12 relative">
+          <div className="absolute inset-0 bg-gradient-mesh opacity-30 pointer-events-none" />
+          <div className="mx-auto grid max-w-7xl gap-12 px-4 md:px-8 lg:grid-cols-2 lg:items-center relative">
+            <div className="reveal-left">
+              <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#008A90]">Contact Us</p>
+              <h1 className="mt-4 font-display text-4xl text-[#0D2A3A] md:text-6xl font-black">We reply within an hour</h1>
+              <p className="mt-4 font-semibold text-[#5A707A] text-sm">Share your details and our team will craft a tailored quote for your space.</p>
+
+              <div className="mt-8 space-y-4">
+                <a href={`tel:${PHONE}`} className="flex items-center gap-4 bg-white border border-[#008A90]/25 rounded-3xl p-4 hover:border-[#008A90] transition-all group shadow-soft">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#EAF3F3] text-[#008A90]">
+                    <Phone className="h-5 w-5" fill="currentColor" strokeWidth={0} />
+                  </div>
+                  <div>
+                    <div className="text-[9px] font-bold uppercase tracking-wider text-[#5A707A]">Call us</div>
+                    <div className="mt-0.5 font-display text-lg text-[#0D2A3A] font-extrabold">{PHONE_DISPLAY}</div>
+                  </div>
+                </a>
+
+                <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 bg-white border border-[#008A90]/25 rounded-3xl p-4 hover:border-[#008A90] transition-all group shadow-soft">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#25D366]/10 text-[#25D366]">
+                    <MessageCircle className="h-5 w-5" fill="currentColor" strokeWidth={0} />
+                  </div>
+                  <div>
+                    <div className="text-[9px] font-bold uppercase tracking-wider text-[#5A707A]">WhatsApp</div>
+                    <div className="mt-0.5 font-display text-lg text-[#0D2A3A] font-extrabold">Chat now</div>
+                  </div>
+                </a>
+
+                <a href={`mailto:msrdeepcleaningservices@gmail.com`} className="flex items-center gap-4 bg-white border border-[#008A90]/25 rounded-3xl p-4 hover:border-[#008A90] transition-all group shadow-soft">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#EAF3F3] text-[#008A90]">
+                    <Mail className="h-5 w-5" strokeWidth={1.5} />
+                  </div>
+                  <div>
+                    <div className="text-[9px] font-bold uppercase tracking-wider text-[#5A707A]">Email us</div>
+                    <div className="mt-0.5 font-display text-sm sm:text-base text-[#0D2A3A] font-extrabold break-all">msrdeepcleaningservices@gmail.com</div>
+                  </div>
+                </a>
+
+                <a href={MAP_LINK} target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 bg-white border border-[#008A90]/25 rounded-3xl p-4 hover:border-[#008A90] transition-all group shadow-soft">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#EAF3F3] text-[#008A90]">
+                    <MapPin className="h-5 w-5" strokeWidth={1.5} />
+                  </div>
+                  <div>
+                    <div className="text-[9px] font-bold uppercase tracking-wider text-[#5A707A]">Visit</div>
+                    <div className="mt-0.5 text-xs text-[#0D2A3A] font-extrabold">{ADDRESS}</div>
+                  </div>
+                </a>
+              </div>
+            </div>
+
+            <div className="bg-white border border-[#008A90]/25 p-6 sm:p-10 rounded-3xl shadow-elegant reveal-right">
+              <h3 className="font-display text-2xl sm:text-3xl font-black text-[#0D2A3A]">Book Your Cleaning</h3>
+              <p className="mt-2 text-xs text-[#5A707A] font-semibold">Fill in your details — we will call you back shortly.</p>
+
+              {submitStatus === "success" && (
+                <div className="mt-4 flex items-center gap-2 rounded-xl bg-[#EAF3F3] border border-[#008A90]/35 px-4 py-3 text-sm text-[#008A90] animate-scale-pop">
+                  <CheckCircle className="h-4 w-4 shrink-0" />
+                  <span>{statusMessage}</span>
                 </div>
-                <div>
-                  <div className="text-[11px] font-normal uppercase tracking-wider text-muted-foreground">Call us</div>
-                  <div className="mt-0.5 font-display text-lg text-foreground">{PHONE_DISPLAY}</div>
+              )}
+              {submitStatus === "error" && (
+                <div className="mt-4 flex items-center gap-2 rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-600 animate-scale-pop">
+                  <AlertCircle className="h-4 w-4 shrink-0" />
+                  <span>{statusMessage}</span>
                 </div>
-              </a>
-              <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="flex items-start gap-4 border border-border bg-card p-4 hover:border-gold">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-whatsapp text-white">
-                  <MessageCircle className="h-5 w-5" fill="currentColor" strokeWidth={0} />
-                </div>
-                <div>
-                  <div className="text-[11px] font-normal uppercase tracking-wider text-muted-foreground">WhatsApp</div>
-                  <div className="mt-0.5 font-display text-lg text-foreground">Chat now</div>
-                </div>
-              </a>
-              <a href={MAP_LINK} target="_blank" rel="noopener noreferrer" className="flex items-start gap-4 border border-border bg-card p-4 hover:border-gold">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-navy text-gold">
-                  <MapPin className="h-5 w-5" strokeWidth={1.5} />
-                </div>
-                <div>
-                  <div className="text-[11px] font-normal uppercase tracking-wider text-muted-foreground">Visit</div>
-                  <div className="mt-0.5 text-sm font-light text-foreground">{ADDRESS}</div>
-                </div>
-              </a>
-              <div className="flex items-start gap-4 border border-border bg-card p-4">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-navy text-gold">
-                  <Clock className="h-5 w-5" strokeWidth={1.5} />
-                </div>
-                <div>
-                  <div className="text-[11px] font-normal uppercase tracking-wider text-muted-foreground">Hours</div>
-                  <div className="mt-0.5 text-sm font-light text-foreground">Mon – Sun · 7:00 AM – 9:00 PM</div>
-                </div>
+              )}
+
+              <div className="mt-6">
+                <form onSubmit={handleSubmit} className="space-y-3">
+                  <input
+                    name="name"
+                    placeholder="Full name"
+                    className="w-full rounded-xl border border-[#008A90]/30 bg-white px-4 py-3.5 text-sm text-[#0D2A3A] placeholder:text-[#5A707A]/50 focus:border-[#008A90] focus:outline-none transition-all"
+                    required
+                    maxLength={100}
+                    pattern="[A-Za-z ]+"
+                    title="Name must contain only letters and spaces."
+                    onInput={(e) => {
+                      const input = e.currentTarget;
+                      input.value = normalizeName(input.value);
+                      input.setCustomValidity("");
+                    }}
+                  />
+                  <input
+                    name="phone"
+                    type="tel"
+                    inputMode="numeric"
+                    placeholder="Phone number"
+                    className="w-full rounded-xl border border-[#008A90]/30 bg-white px-4 py-3.5 text-sm text-[#0D2A3A] placeholder:text-[#5A707A]/50 focus:border-[#008A90] focus:outline-none transition-all"
+                    required
+                    maxLength={10}
+                    pattern="[0-9]{10}"
+                    title="Mobile number must contain exactly 10 digits."
+                    onInput={(e) => {
+                      const input = e.currentTarget;
+                      input.value = normalizePhoneNumber(input.value);
+                      input.setCustomValidity("");
+                    }}
+                  />
+                  <select name="service" className="w-full rounded-xl border border-[#008A90]/30 bg-white px-4 py-3.5 text-sm text-[#0D2A3A] focus:border-[#008A90] focus:outline-none transition-all cursor-pointer">
+                    <option>General Enquiry</option>
+                    <option>Deep Home Cleaning</option>
+                    <option>Kitchen Deep Cleaning</option>
+                    <option>Water Tank Cleaning</option>
+                  </select>
+                  <textarea name="message" placeholder="Optional message" className="w-full rounded-xl border border-[#008A90]/30 bg-white px-4 py-3.5 text-sm text-[#0D2A3A] placeholder:text-[#5A707A]/50 focus:border-[#008A90] focus:outline-none transition-all" rows={3} />
+                  <button type="submit" disabled={isSubmitting} className="flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#008A90] to-[#005F63] px-7 py-4 text-sm font-bold text-white disabled:opacity-50 hover:shadow-teal-glow transition-all">
+                    {isSubmitting ? (
+                      <>
+                        Processing...
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      </>
+                    ) : (
+                      <>
+                        Send request via WhatsApp <ArrowRight className="h-4 w-4 animate-luxury-float" />
+                      </>
+                    )}
+                  </button>
+                </form>
+                <p className="mt-4 text-center text-xs font-semibold text-[#5A707A]">Or call <a href={`tel:${PHONE}`} className="text-[#008A90] font-bold">{PHONE_DISPLAY}</a></p>
               </div>
             </div>
           </div>
-
-          <div className="bg-navy p-8 text-white md:p-10">
-            <h3 className="font-display text-2xl text-white md:text-3xl">Book Your Cleaning</h3>
-            <p className="mt-2 text-sm font-light text-white/70">Fill in your details — we will call you back shortly.</p>
-            
-            {submitStatus === "success" && (
-              <div className="mt-4 flex items-center gap-2 rounded-md bg-green-500/20 px-4 py-3 text-sm text-green-200">
-                <CheckCircle className="h-4 w-4 shrink-0" />
-                <span>{statusMessage}</span>
-              </div>
-            )}
-            {submitStatus === "error" && (
-              <div className="mt-4 flex items-center gap-2 rounded-md bg-orange-500/20 px-4 py-3 text-sm text-orange-200">
-                <AlertCircle className="h-4 w-4 shrink-0" />
-                <span>{statusMessage}</span>
-              </div>
-            )}
-            
-            <div className="mt-6">
-              <form onSubmit={handleSubmit} className="space-y-3">
-                <input
-                  name="name"
-                  placeholder="Full name"
-                  className="w-full rounded-md border border-input bg-white px-4 py-3 text-sm text-foreground"
-                  required
-                  maxLength={100}
-                  pattern="[A-Za-z ]+"
-                  title="Name must contain only letters and spaces."
-                  onInput={(e) => {
-                    const input = e.currentTarget;
-                    input.value = normalizeName(input.value);
-                    input.setCustomValidity("");
-                  }}
-                />
-                <input
-                  name="phone"
-                  type="tel"
-                  inputMode="numeric"
-                  placeholder="Phone number"
-                  className="w-full rounded-md border border-input bg-white px-4 py-3 text-sm text-foreground"
-                  required
-                  maxLength={10}
-                  pattern="[0-9]{10}"
-                  title="Mobile number must contain exactly 10 digits."
-                  onInput={(e) => {
-                    const input = e.currentTarget;
-                    input.value = normalizePhoneNumber(input.value);
-                    input.setCustomValidity("");
-                  }}
-                />
-                <select name="service" className="w-full rounded-md border border-input bg-white px-4 py-3 text-sm text-foreground">
-                  <option>General Enquiry</option>
-                  <option>Deep Home Cleaning</option>
-                  <option>Kitchen Deep Cleaning</option>
-                  <option>Water Tank Cleaning</option>
-                </select>
-                <textarea name="message" placeholder="Optional message" className="w-full rounded-md border border-input bg-white px-4 py-3 text-sm text-foreground" rows={3} />
-                <button type="submit" disabled={isSubmitting} className="flex w-full items-center justify-center gap-2 rounded-full bg-gold px-7 py-4 text-sm font-normal text-navy disabled:opacity-60">
-                  {isSubmitting ? "Saving & Opening WhatsApp..." : "Send via WhatsApp"} <ArrowRight className="h-4 w-4" />
-                </button>
-              </form>
-              <p className="mt-4 text-center text-xs font-light text-white/60">Or call <a href={`tel:${PHONE}`} className="text-gold">{PHONE_DISPLAY}</a></p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "LocalBusiness",
-        name: "MSR Deep Cleaning",
-        telephone: PHONE,
-        address: {
-          "@type": "PostalAddress",
-          streetAddress: "House no 3-159, Government School Kamla Nagar Colony, Jillelaguda",
-          addressLocality: "Hyderabad",
-          postalCode: "500097",
-          addressCountry: "IN",
-        },
-        openingHours: ["Mo-Su 07:00-21:00"],
-      }) }} />
-    </main>
+        </section>
+      </main>
+      <Footer />
     </>
   );
 }

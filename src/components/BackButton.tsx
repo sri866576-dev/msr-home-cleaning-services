@@ -21,10 +21,10 @@ export default function BackButton() {
         type="button"
         onClick={handleBack}
         aria-label="Go back"
-        className="inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm bg-white/6 text-black hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+        className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm bg-white border border-[#008A90]/30 text-[#0D2A3A] hover:text-[#008A90] hover:border-[#008A90] hover:shadow-soft focus:outline-none focus-visible:ring-2 focus-visible:ring-[#008A90] transition-all"
       >
         <ArrowLeft className="h-4 w-4" />
-        <span className="hidden sm:inline">Back</span>
+        <span className="font-semibold">Back</span>
       </button>
     </div>
   );

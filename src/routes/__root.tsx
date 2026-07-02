@@ -75,14 +75,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "MSR Deep Cleaning Specialist | Best Cleaning Service in Hyderabad" },
+      { title: "MSR Deep Cleaning Services" },
       {
         name: "description",
         content:
           "MSR Deep Cleaning Service Group — Hyderabad's premium home, office & deep cleaning specialists. Trained staff, eco-friendly products, 100% satisfaction. Call +91 891 978 0725.",
       },
       { name: "author", content: "MSR Deep Cleaning" },
-      { property: "og:title", content: "MSR Deep Cleaning Specialist — Hyderabad" },
+      { property: "og:title", content: "MSR Deep Cleaning Services" },
       {
         property: "og:description",
         content: "Premium home & office cleaning in Hyderabad. Book now.",
@@ -112,7 +112,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         : []),
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Roboto:wght@300;400;500;700&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap",
       },
       {
         rel: "stylesheet",
@@ -125,6 +125,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         rel: "apple-touch-icon",
         href: logoImage,
+      },
+      {
+        rel: "manifest",
+        href: "/manifest.json",
       },
     ],
   }),

@@ -11,11 +11,12 @@ const WhatsAppIcon = ({ className }: { className?: string }) => (
     <path d="M12.006 2.001c-5.523 0-10.004 4.48-10.004 10.003 0 1.761.462 3.48 1.337 4.99L2 22l4.994-1.315A9.947 9.947 0 0012.006 22c5.523 0 10.003-4.48 10.003-10.003 0-5.523-4.48-10.003-10.003-10.003zm5.799 14.569c-.273.766-1.62 1.475-2.233 1.577-.613.099-1.073.136-1.668-.021-.594-.158-1.558-.514-2.492-1.412-.93-.898-1.566-1.999-1.749-2.268-.183-.27-.021-.417.15-.566.153-.146.337-.386.506-.581.17-.197.224-.34.337-.557.112-.217.056-.398-.025-.57-.082-.171-.661-1.705-.905-2.34-.242-.608-.49-.53-.676-.535-.183-.005-.397-.005-.61-.005-.215 0-.498.074-.762.375-.263.299-1.012 1.002-1.012 2.443 0 1.441 1.06 2.298 1.21 2.456.149.148 2.53 3.729 6.132 5.222.858.371 1.53.562 2.053.631.868.119 1.67.009 2.306-.682.626-.691.907-1.637.907-2.255 0-.618-.204-.911-.45-1.038-.248-.126-.577-.176-.85-.109-.275.068-1.723.71-1.985.793z" />
   </svg>
 );
+
 export function FloatingContact() {
   const waLink = `https://wa.me/${WHATSAPP_PHONE}?text=${WA_MSG}`;
 
   return (
-    <div className="fixed bottom-4 right-4 z-50 flex flex-col items-end gap-3 sm:bottom-5 sm:right-5">
+    <div className="floating-contact-stack">
       <a
         href={waLink}
         target="_blank"
@@ -23,15 +24,15 @@ export function FloatingContact() {
         aria-label={`WhatsApp ${PHONE_DISPLAY}`}
         className="floating-contact-btn floating-contact-whatsapp"
       >
-        <WhatsAppIcon className="h-4 w-4 sm:h-6 sm:w-6" />
+        <WhatsAppIcon className="h-6 w-6" />
       </a>
 
       <a
         href={`tel:${PHONE}`}
         aria-label={`Call ${PHONE_DISPLAY}`}
-        className="floating-contact-btn floating-contact-phone"
+        className="floating-contact-btn floating-contact-phone shadow-teal-glow"
       >
-        <Phone className="h-4 w-4 sm:h-6 sm:w-6" />
+        <Phone className="h-6 w-6" />
       </a>
     </div>
   );
