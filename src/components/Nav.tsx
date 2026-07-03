@@ -38,7 +38,7 @@ export default function Nav({ onBook }: { onBook?: () => void }) {
     { label: "Services", to: "/#services", anchor: true },
     { label: "About", to: "/about" },
     { label: "Reviews", to: "/#reviews", anchor: true },
-    { label: "App", to: "#", download: true },
+    // { label: "App", to: "#", download: true },
     { label: "Contact", to: "/contact" },
   ];
 
